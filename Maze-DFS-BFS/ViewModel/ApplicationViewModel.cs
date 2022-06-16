@@ -1,4 +1,5 @@
 ﻿using Maze_DFS_BFS.Models;
+using Maze_DFS_BFS.Services;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,32 +12,44 @@ namespace Maze_DFS_BFS.ViewModel
     public class ApplicationViewModel
     {
         public MazeModel Model { get; private set; }
-
         public Size ClientAreaSize { get; set; }
-        private TableLayoutPanel MainPanel;
+
+        private readonly LayoutGenerator_v2 _layoutGenerator;
+        private readonly IColorDialog ColorDialog;
 
         public ApplicationViewModel()
         {
             Model = new MazeModel();
+            _layoutGenerator = new LayoutGenerator_v2();
+            ColorDialog = new ColorService();
         }
 
-        public TableLayoutPanel GenerateStartPanel()
+        public TableLayoutPanel GenerateStartPanel(Size clientSize)
         {
-            MainPanel = new TableLayoutPanel() { ColumnCount = Model.Columns, 
-                                                 RowCount = Model.Rows, 
-                                                 Dock = DockStyle.Fill, 
-                                                 CellBorderStyle = TableLayoutPanelCellBorderStyle.Single};
-            for(int i = 0;i < Model.Columns;i++)
-            {
-                MainPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, ClientAreaSize.Width / (float)Model.Columns));
-            }
+            _layoutGenerator.RowNumber = Model.Rows;
+            _layoutGenerator.ColumnNumber = Model.Columns;
+            _layoutGenerator.ClientSize = clientSize;
 
-            for (int i = 0; i < Model.Rows; i++)
-            {
-                MainPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ClientAreaSize.Height / (float)Model.Rows));
-            }
+            return _layoutGenerator.GeneratePanel();
+        }
 
-            return MainPanel;
+        /// <summary>
+        /// Pozwala ustawić kolor węzła początkowego i końcowego
+        /// </summary>
+        /// <param name="nodeType">0 - start node, 1 - end node</param>
+        public void HandleSetColor(int nodeType)
+        {
+            if (ColorDialog.ShowColorPicker() == DialogResult.OK)
+            {
+                if(nodeType == 0)
+                {
+                    MenuMode.StartColor = ColorDialog.SelectedColor;
+                }
+                else
+                {
+                    MenuMode.FinishColor = ColorDialog.SelectedColor;
+                }
+            }
         }
     }
 }
