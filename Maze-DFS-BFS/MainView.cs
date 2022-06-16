@@ -1,4 +1,5 @@
-﻿using Maze_DFS_BFS.ViewModel;
+﻿using Maze_DFS_BFS.Services;
+using Maze_DFS_BFS.ViewModel;
 using Maze_DFS_BFS.Views;
 using System;
 using System.Collections.Generic;
@@ -38,8 +39,53 @@ namespace Maze_DFS_BFS
 
             if(form.ShowDialog() == DialogResult.OK)
             {
-                Controls.Add(_actualPanel = _viewModel.GenerateStartPanel());
+                _actualPanel = _viewModel.GenerateStartPanel(ClientSize);
+                Controls.Add(_actualPanel); 
             }
+            form.Dispose();
+
+            _actualPanel.BringToFront();
+        }
+
+        private void btnSetStartColor_Click(object sender, EventArgs e)
+        {
+            _viewModel.HandleSetColor(0);
+        }
+
+        private void btnSetColorFinish_Click(object sender, EventArgs e)
+        {
+            _viewModel.HandleSetColor(1);
+        }
+
+        private void btnSelectStartPoint_Click(object sender, EventArgs e)
+        {
+            MenuMode.ConfigType = ConfigType.AssigningStart;
+        }
+
+        private void btnSelectEndPoint_Click(object sender, EventArgs e)
+        {
+            MenuMode.ConfigType = ConfigType.AssigningFinish;
+        }
+
+        private void btnDrawBorders_Click(object sender, EventArgs e)
+        {
+            MenuMode.ConfigType = ConfigType.DrawingBorders;
+        }
+
+        private void btnBFS_Click(object sender, EventArgs e)
+        {
+            MenuMode.SearchMode = SearchMode.BFS;
+            var menuItem = sender as ToolStripMenuItem;
+            menuItem.Checked = true;
+            btnDFS.Checked = false;
+        }
+
+        private void btnDFS_Click(object sender, EventArgs e)
+        {
+            MenuMode.SearchMode = SearchMode.DFS;
+            var menuItem = sender as ToolStripMenuItem;
+            menuItem.Checked = true;
+            btnBFS.Checked = false;
         }
     }
 }

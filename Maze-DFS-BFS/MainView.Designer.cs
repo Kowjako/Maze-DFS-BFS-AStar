@@ -35,7 +35,6 @@ namespace Maze_DFS_BFS
             this.btnSelectSearchType = new System.Windows.Forms.ToolStripMenuItem();
             this.btnBFS = new System.Windows.Forms.ToolStripMenuItem();
             this.btnDFS = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnClose = new System.Windows.Forms.ToolStripMenuItem();
             this.rozwiążToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnConfigurationItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSelectStartPoint = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,7 +63,6 @@ namespace Maze_DFS_BFS
             this.mainMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnSelectMatrixSize,
             this.btnSelectSearchType,
-            this.btnClose,
             this.rozwiążToolStripMenuItem});
             this.mainMenuItem.Name = "mainMenuItem";
             this.mainMenuItem.Size = new System.Drawing.Size(92, 20);
@@ -91,20 +89,16 @@ namespace Maze_DFS_BFS
             this.btnBFS.Checked = true;
             this.btnBFS.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnBFS.Name = "btnBFS";
-            this.btnBFS.Size = new System.Drawing.Size(94, 22);
+            this.btnBFS.Size = new System.Drawing.Size(180, 22);
             this.btnBFS.Text = "BFS";
+            this.btnBFS.Click += new System.EventHandler(this.btnBFS_Click);
             // 
             // btnDFS
             // 
             this.btnDFS.Name = "btnDFS";
-            this.btnDFS.Size = new System.Drawing.Size(94, 22);
+            this.btnDFS.Size = new System.Drawing.Size(180, 22);
             this.btnDFS.Text = "DFS";
-            // 
-            // btnClose
-            // 
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(218, 22);
-            this.btnClose.Text = "Zamknij";
+            this.btnDFS.Click += new System.EventHandler(this.btnDFS_Click);
             // 
             // rozwiążToolStripMenuItem
             // 
@@ -127,18 +121,21 @@ namespace Maze_DFS_BFS
             this.btnSelectStartPoint.Name = "btnSelectStartPoint";
             this.btnSelectStartPoint.Size = new System.Drawing.Size(201, 22);
             this.btnSelectStartPoint.Text = "Zaznacz punkt startowy";
+            this.btnSelectStartPoint.Click += new System.EventHandler(this.btnSelectStartPoint_Click);
             // 
             // btnSelectEndPoint
             // 
             this.btnSelectEndPoint.Name = "btnSelectEndPoint";
             this.btnSelectEndPoint.Size = new System.Drawing.Size(201, 22);
             this.btnSelectEndPoint.Text = "Zaznacz punkt końcowy";
+            this.btnSelectEndPoint.Click += new System.EventHandler(this.btnSelectEndPoint_Click);
             // 
             // btnDrawBorders
             // 
             this.btnDrawBorders.Name = "btnDrawBorders";
             this.btnDrawBorders.Size = new System.Drawing.Size(201, 22);
             this.btnDrawBorders.Text = "Narysuj sciany";
+            this.btnDrawBorders.Click += new System.EventHandler(this.btnDrawBorders_Click);
             // 
             // btnColorsItem
             // 
@@ -154,12 +151,14 @@ namespace Maze_DFS_BFS
             this.btnSetStartColor.Name = "btnSetStartColor";
             this.btnSetStartColor.Size = new System.Drawing.Size(199, 22);
             this.btnSetStartColor.Text = "Kolor węzła startowego";
+            this.btnSetStartColor.Click += new System.EventHandler(this.btnSetStartColor_Click);
             // 
             // btnSetColorFinish
             // 
             this.btnSetColorFinish.Name = "btnSetColorFinish";
             this.btnSetColorFinish.Size = new System.Drawing.Size(199, 22);
             this.btnSetColorFinish.Text = "Kolor węzła końcowego";
+            this.btnSetColorFinish.Click += new System.EventHandler(this.btnSetColorFinish_Click);
             // 
             // MainView
             // 
@@ -185,7 +184,6 @@ namespace Maze_DFS_BFS
         private System.Windows.Forms.ToolStripMenuItem btnSelectSearchType;
         private System.Windows.Forms.ToolStripMenuItem btnBFS;
         private System.Windows.Forms.ToolStripMenuItem btnDFS;
-        private System.Windows.Forms.ToolStripMenuItem btnClose;
         private System.Windows.Forms.ToolStripMenuItem btnConfigurationItem;
         private System.Windows.Forms.ToolStripMenuItem btnSelectStartPoint;
         private System.Windows.Forms.ToolStripMenuItem btnSelectEndPoint;
