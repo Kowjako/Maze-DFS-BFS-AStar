@@ -8,7 +8,8 @@ namespace Maze_DFS_BFS.Services
     public enum SearchMode
     {
         BFS = 1,
-        DFS = 2
+        DFS = 2,
+        A_STAR = 3
     }
 
     public enum ConfigType

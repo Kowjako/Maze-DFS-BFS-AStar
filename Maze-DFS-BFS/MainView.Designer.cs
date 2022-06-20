@@ -43,6 +43,7 @@ namespace Maze_DFS_BFS
             this.btnColorsItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSetStartColor = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSetColorFinish = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnAStar = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -79,7 +80,8 @@ namespace Maze_DFS_BFS
             // 
             this.btnSelectSearchType.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnBFS,
-            this.btnDFS});
+            this.btnDFS,
+            this.btnAStar});
             this.btnSelectSearchType.Name = "btnSelectSearchType";
             this.btnSelectSearchType.Size = new System.Drawing.Size(218, 22);
             this.btnSelectSearchType.Text = "Wybierz typ przeszukiwania";
@@ -160,6 +162,13 @@ namespace Maze_DFS_BFS
             this.btnSetColorFinish.Text = "Kolor węzła końcowego";
             this.btnSetColorFinish.Click += new System.EventHandler(this.btnSetColorFinish_Click);
             // 
+            // btnAStar
+            // 
+            this.btnAStar.Name = "btnAStar";
+            this.btnAStar.Size = new System.Drawing.Size(180, 22);
+            this.btnAStar.Text = "A*";
+            this.btnAStar.Click += new System.EventHandler(this.btnAStar_Click);
+            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -192,6 +201,7 @@ namespace Maze_DFS_BFS
         private System.Windows.Forms.ToolStripMenuItem btnSetStartColor;
         private System.Windows.Forms.ToolStripMenuItem btnSetColorFinish;
         private System.Windows.Forms.ToolStripMenuItem rozwiążToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem btnAStar;
     }
 }
 

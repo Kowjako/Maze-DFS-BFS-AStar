@@ -78,6 +78,7 @@ namespace Maze_DFS_BFS
             var menuItem = sender as ToolStripMenuItem;
             menuItem.Checked = true;
             btnDFS.Checked = false;
+            btnAStar.Checked = false;
         }
 
         private void btnDFS_Click(object sender, EventArgs e)
@@ -86,6 +87,16 @@ namespace Maze_DFS_BFS
             var menuItem = sender as ToolStripMenuItem;
             menuItem.Checked = true;
             btnBFS.Checked = false;
+            btnAStar.Checked = false;
+        }
+
+        private void btnAStar_Click(object sender, EventArgs e)
+        {
+            MenuMode.SearchMode = SearchMode.DFS;
+            var menuItem = sender as ToolStripMenuItem;
+            menuItem.Checked = true;
+            btnBFS.Checked = false;
+            btnDFS.Checked = false;
         }
     }
 }
