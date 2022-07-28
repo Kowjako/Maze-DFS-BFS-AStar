@@ -12,12 +12,16 @@ namespace Maze_DFS_BFS.Services
         public int RowNumber { get; set; }
         public int ColumnNumber { get; set; }
 
+        private const int WALL_IDENTIFIER = 0;
+        private const int UNASSIGNED_CELL = -1;
+
         /// <summary>
         /// Metoda tworzy calkowity panel dla algorytmu
         /// </summary>
         /// <returns></returns>
         public TableLayoutPanel GeneratePanel()
         {
+            //Tworzymy dodatkowe kolumny na zaznaczanie scian
             var panel = new DoubleBufferedTable()
             {
                 ColumnCount = ColumnNumber * 2 - 1,
@@ -27,6 +31,7 @@ namespace Maze_DFS_BFS.Services
                 Padding = new Padding(0)
             };        
 
+            //Tworzymy rozmiary scian
             for (int i = 0; i < panel.ColumnCount; i++)
             {
                 if (i % 2 == 1)
@@ -68,6 +73,7 @@ namespace Maze_DFS_BFS.Services
                 for (int j = 0; j < tpl.ColumnCount; j += 2)
                 {
                     var panel = CreatePanelAndAssign(tpl, i, j);
+                    panel.Tag = (i / 2 * ((tpl.ColumnCount + 1) / 2) + j / 2 + 1).ToString();
 
                     panel.Click += Panel_Click;
 
@@ -127,13 +133,17 @@ namespace Maze_DFS_BFS.Services
                         if(j % 2 == 1 && i % 2 == 1)
                         {
                             panel.BackColor = Color.Black;
+                            panel.Tag = UNASSIGNED_CELL; 
                         }
                         else
                         {
-                            panel.Click += (sender, e) =>
+                            panel.Click += delegate (object sender, EventArgs e)
                             {
                                 if (MenuMode.ConfigType == ConfigType.DrawingBorders)
+                                {
                                     panel.BackColor = Color.Black;
+                                    panel.Tag = WALL_IDENTIFIER;
+                                }
                             };
                         }
                     }

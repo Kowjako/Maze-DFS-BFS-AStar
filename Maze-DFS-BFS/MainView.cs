@@ -2,13 +2,6 @@
 using Maze_DFS_BFS.ViewModel;
 using Maze_DFS_BFS.Views;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Maze_DFS_BFS
@@ -31,7 +24,6 @@ namespace Maze_DFS_BFS
                 Controls.Remove(_actualPanel);
             }
 
-            _viewModel.ClientAreaSize = ClientSize;
             var form = new MatrixSizeForm(_viewModel);
             
             form.Owner = this;
@@ -97,6 +89,11 @@ namespace Maze_DFS_BFS
             menuItem.Checked = true;
             btnBFS.Checked = false;
             btnDFS.Checked = false;
+        }
+
+        private void btnSolve_Click(object sender, EventArgs e)
+        {
+            _viewModel.HandleSolve();
         }
     }
 }

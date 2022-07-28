@@ -35,7 +35,8 @@ namespace Maze_DFS_BFS
             this.btnSelectSearchType = new System.Windows.Forms.ToolStripMenuItem();
             this.btnBFS = new System.Windows.Forms.ToolStripMenuItem();
             this.btnDFS = new System.Windows.Forms.ToolStripMenuItem();
-            this.rozwiążToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnAStar = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnSolve = new System.Windows.Forms.ToolStripMenuItem();
             this.btnConfigurationItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSelectStartPoint = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSelectEndPoint = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,7 +44,6 @@ namespace Maze_DFS_BFS
             this.btnColorsItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSetStartColor = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSetColorFinish = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnAStar = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,7 +64,7 @@ namespace Maze_DFS_BFS
             this.mainMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnSelectMatrixSize,
             this.btnSelectSearchType,
-            this.rozwiążToolStripMenuItem});
+            this.btnSolve});
             this.mainMenuItem.Name = "mainMenuItem";
             this.mainMenuItem.Size = new System.Drawing.Size(92, 20);
             this.mainMenuItem.Text = "Menu główne";
@@ -91,22 +91,30 @@ namespace Maze_DFS_BFS
             this.btnBFS.Checked = true;
             this.btnBFS.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnBFS.Name = "btnBFS";
-            this.btnBFS.Size = new System.Drawing.Size(180, 22);
+            this.btnBFS.Size = new System.Drawing.Size(94, 22);
             this.btnBFS.Text = "BFS";
             this.btnBFS.Click += new System.EventHandler(this.btnBFS_Click);
             // 
             // btnDFS
             // 
             this.btnDFS.Name = "btnDFS";
-            this.btnDFS.Size = new System.Drawing.Size(180, 22);
+            this.btnDFS.Size = new System.Drawing.Size(94, 22);
             this.btnDFS.Text = "DFS";
             this.btnDFS.Click += new System.EventHandler(this.btnDFS_Click);
             // 
-            // rozwiążToolStripMenuItem
+            // btnAStar
             // 
-            this.rozwiążToolStripMenuItem.Name = "rozwiążToolStripMenuItem";
-            this.rozwiążToolStripMenuItem.Size = new System.Drawing.Size(218, 22);
-            this.rozwiążToolStripMenuItem.Text = "Rozwiąż";
+            this.btnAStar.Name = "btnAStar";
+            this.btnAStar.Size = new System.Drawing.Size(94, 22);
+            this.btnAStar.Text = "A*";
+            this.btnAStar.Click += new System.EventHandler(this.btnAStar_Click);
+            // 
+            // btnSolve
+            // 
+            this.btnSolve.Name = "btnSolve";
+            this.btnSolve.Size = new System.Drawing.Size(218, 22);
+            this.btnSolve.Text = "Rozwiąż";
+            this.btnSolve.Click += new System.EventHandler(this.btnSolve_Click);
             // 
             // btnConfigurationItem
             // 
@@ -162,13 +170,6 @@ namespace Maze_DFS_BFS
             this.btnSetColorFinish.Text = "Kolor węzła końcowego";
             this.btnSetColorFinish.Click += new System.EventHandler(this.btnSetColorFinish_Click);
             // 
-            // btnAStar
-            // 
-            this.btnAStar.Name = "btnAStar";
-            this.btnAStar.Size = new System.Drawing.Size(180, 22);
-            this.btnAStar.Text = "A*";
-            this.btnAStar.Click += new System.EventHandler(this.btnAStar_Click);
-            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -200,7 +201,7 @@ namespace Maze_DFS_BFS
         private System.Windows.Forms.ToolStripMenuItem btnColorsItem;
         private System.Windows.Forms.ToolStripMenuItem btnSetStartColor;
         private System.Windows.Forms.ToolStripMenuItem btnSetColorFinish;
-        private System.Windows.Forms.ToolStripMenuItem rozwiążToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem btnSolve;
         private System.Windows.Forms.ToolStripMenuItem btnAStar;
     }
 }
