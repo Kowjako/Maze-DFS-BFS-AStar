@@ -1,4 +1,5 @@
-﻿using Maze_DFS_BFS.Models;
+﻿using Maze_DFS_BFS.Algorithms;
+using Maze_DFS_BFS.Models;
 using Maze_DFS_BFS.Services;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,10 @@ namespace Maze_DFS_BFS.ViewModel
     public class ApplicationViewModel
     {
         public MazeModel Model { get; private set; }
-        public Size ClientAreaSize { get; set; }
 
         private readonly LayoutGenerator_v2 _layoutGenerator;
         private readonly IColorDialog ColorDialog;
+        private TableLayoutPanel MainPanel;
 
         public ApplicationViewModel()
         {
@@ -30,7 +31,7 @@ namespace Maze_DFS_BFS.ViewModel
             _layoutGenerator.ColumnNumber = Model.Columns;
             _layoutGenerator.ClientSize = clientSize;
 
-            return _layoutGenerator.GeneratePanel();
+            return MainPanel = _layoutGenerator.GeneratePanel();
         }
 
         /// <summary>
@@ -50,6 +51,43 @@ namespace Maze_DFS_BFS.ViewModel
                     MenuMode.FinishColor = ColorDialog.SelectedColor;
                 }
             }
+        }
+
+        public void HandleSolve()
+        {
+            Model.LayoutMatrix = GetCompletedMatrixFromLayout();
+            Model.MainMatrix = GetMainMatrixFromLayout();
+            Model.SolveMaze(MenuMode.SearchMode switch
+            {
+                SearchMode.BFS => new BFS(),
+                SearchMode.DFS => new DFS(),
+                SearchMode.A_STAR => new A_STAR(),
+                _ => throw new InvalidOperationException("Cannot find implementation for this algorithm")
+            });
+        }
+
+        private int[,] GetCompletedMatrixFromLayout()
+        {
+            var array = new int[MainPanel.RowCount, MainPanel.ColumnCount];
+
+            for (var i = 0; i < MainPanel.RowCount; i++)
+            {
+                for (var j = 0; j < MainPanel.ColumnCount; j++)
+                {
+                    var cell = MainPanel.GetControlFromPosition(j,i) as Panel;
+                    if (cell != null)
+                    {
+                        array[i, j] = Convert.ToInt32(cell.Tag);
+                    }
+                }
+            }
+            
+            return array;
+        }
+
+        private int[,] GetMainMatrixFromLayout()
+        {
+            return new int[5, 5];
         }
     }
 }
