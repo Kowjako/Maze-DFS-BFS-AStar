@@ -29,7 +29,26 @@ namespace Maze_DFS_BFS.Services
         public static int StartPointIndex { get; set; }
         public static int EndPointIndex { get; set; }
 
-        public static Color StartColor { get; set; } = Color.Maroon;
-        public static Color FinishColor { get; set; } = Color.Lavender;
+        public static Color StartColor { get; set; } = Color.Orchid;
+        public static Color FinishColor { get; set; } = Color.DodgerBlue;
+    }
+
+    public static class Extensions
+    {
+        public static void PushMany<T>(this Stack<T> stack, IEnumerable<T> items)
+        {
+            foreach(var item in items)
+            {
+                stack.Push(item);
+            }
+        }
+
+        public static void EnqueueMany<T>(this Queue<T> queue, IEnumerable<T> items)
+        {
+            foreach(var item in items)
+            {
+                queue.Enqueue(item);
+            }
+        }
     }
 }

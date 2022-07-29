@@ -2,6 +2,7 @@
 using Maze_DFS_BFS.ViewModel;
 using Maze_DFS_BFS.Views;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Maze_DFS_BFS
@@ -15,6 +16,7 @@ namespace Maze_DFS_BFS
         {
             InitializeComponent();
             _viewModel = new ApplicationViewModel();
+            _viewModel.SolutionDone += (e, args) => DrawSolution();
         }
 
         private void btnSelectMatrixSize_Click(object sender, EventArgs e)
@@ -94,6 +96,19 @@ namespace Maze_DFS_BFS
         private void btnSolve_Click(object sender, EventArgs e)
         {
             _viewModel.HandleSolve();
+        }
+
+        private void DrawSolution()
+        {
+            var nodes = _viewModel.MazeSolution;
+            foreach(var control in _actualPanel.Controls)
+            {
+                var panel = control as Panel;
+                if(panel != null && nodes.Contains(Convert.ToInt32(panel.Tag)))
+                {
+                    panel.BackColor = Color.Silver;
+                }
+            }
         }
     }
 }

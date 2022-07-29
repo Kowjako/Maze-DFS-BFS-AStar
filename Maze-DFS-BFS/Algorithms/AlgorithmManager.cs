@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Maze_DFS_BFS.Services;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Maze_DFS_BFS.Algorithms
 {
@@ -50,6 +52,9 @@ namespace Maze_DFS_BFS.Algorithms
             if (layoutColumn != LayoutMatrix.GetLength(1) - 1 && LayoutMatrix[layoutRow, layoutColumn + 1] != WALL)
                 neighbours.Add(LayoutMatrix[layoutRow, layoutColumn + 2]);
 
+            neighbours.Sort();
+            neighbours.Reverse();
+
             return neighbours;
         }
     }
@@ -57,22 +62,58 @@ namespace Maze_DFS_BFS.Algorithms
     public class DFS : SearchAlgorithm
     {
         private Stack<int> _stack;
+        private List<int> _visitedNodes;
 
-        public DFS(int sIndex, int eIndex) : base(sIndex, eIndex) { }
+        public DFS(int sIndex, int eIndex) : base(sIndex, eIndex)
+        {
+            _stack = new Stack<int>();
+            _visitedNodes = new List<int>();
+            _visitedNodes.Add(StartIndex);
+        }
 
         public override void Solve()
         {
-            
+            var neigbours = GetPossibleNextMoves(StartIndex);
+            _stack.PushMany(neigbours);
+
+            while(!_stack.Contains(EndIndex))
+            {
+                var item = _stack.Pop();
+                _visitedNodes.Add(item);
+                _stack.PushMany(GetPossibleNextMoves(item).Except(_visitedNodes));
+            }
+
+            Solution = _visitedNodes.Except(new [] { StartIndex }).ToList();
         }
     }
 
     public class BFS : SearchAlgorithm
     {
-        public BFS(int sIndex, int eIndex) : base(sIndex, eIndex) { }
+        private Queue<int> _queue;
+        private List<int> _visitedNodes;
+
+        public BFS(int sIndex, int eIndex) : base(sIndex, eIndex)
+        {
+            _queue = new Queue<int>();
+            _visitedNodes = new List<int>();
+            _visitedNodes.Add(StartIndex);
+        }
 
         public override void Solve()
         {
+            var neigbours = GetPossibleNextMoves(StartIndex);
+            neigbours.Reverse();
+            _queue.EnqueueMany(neigbours);
+            while(!_queue.Contains(EndIndex))
+            {
+                var item = _queue.Dequeue();
+                _visitedNodes.Add(item);
+                var nextNodes = GetPossibleNextMoves(item);
+                nextNodes.Reverse();
+                _queue.EnqueueMany(nextNodes.Except(_visitedNodes));
+            }
 
+            Solution = _visitedNodes.Except(new[] { StartIndex }).ToList();
         }
     }
 

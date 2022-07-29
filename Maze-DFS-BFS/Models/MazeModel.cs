@@ -27,10 +27,5 @@ namespace Maze_DFS_BFS.Models
             algorithm.Solve();
             return algorithm.Solution;
         }
-
-        private int[,] TransformMatrixToDefault()
-        {
-            return new int[3, 3];
-        }
     }
 }

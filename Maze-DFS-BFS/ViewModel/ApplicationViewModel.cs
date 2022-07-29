@@ -18,6 +18,9 @@ namespace Maze_DFS_BFS.ViewModel
         private readonly IColorDialog ColorDialog;
         private TableLayoutPanel MainPanel;
 
+        public event EventHandler SolutionDone;
+        public List<int> MazeSolution { get; private set; }
+
         public ApplicationViewModel()
         {
             Model = new MazeModel();
@@ -57,13 +60,15 @@ namespace Maze_DFS_BFS.ViewModel
         {
             Model.LayoutMatrix = GetCompletedMatrixFromLayout();
             Model.MainMatrix = GetMainMatrixFromLayout();
-            Model.SolveMaze(MenuMode.SearchMode switch
+            MazeSolution = Model.SolveMaze(MenuMode.SearchMode switch
             {
                 SearchMode.BFS => new BFS(MenuMode.StartPointIndex, MenuMode.EndPointIndex),
                 SearchMode.DFS => new DFS(MenuMode.StartPointIndex, MenuMode.EndPointIndex),
                 SearchMode.A_STAR => new A_STAR(MenuMode.StartPointIndex, MenuMode.EndPointIndex),
                 _ => throw new InvalidOperationException("Cannot find implementation for this algorithm")
             });
+
+            SolutionDone(this, EventArgs.Empty);
         }
 
         private int[,] GetCompletedMatrixFromLayout()
