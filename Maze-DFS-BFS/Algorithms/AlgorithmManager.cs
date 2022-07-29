@@ -1,14 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Maze_DFS_BFS.Algorithms
 {
     public abstract class SearchAlgorithm
     {
-        public SearchAlgorithm()
+        private const int WALL = 0;
+        protected readonly int StartIndex, EndIndex;
+
+        public SearchAlgorithm(int startIndex, int endIndex)
         {
             Solution = new List<int>();
+            StartIndex = startIndex;
+            EndIndex = endIndex;
         }
 
         //Matrix to solve
@@ -28,21 +31,23 @@ namespace Maze_DFS_BFS.Algorithms
                 : 2* ((actualIndexInMatrix - 1) % Matrix.GetLength(1));
         }
 
+        //Find accesible neighbours
         protected virtual List<int> GetPossibleNextMoves(int actualIndexInMatrix)
         {
             var neighbours = new List<int>();
-            //1. Obliczanie indeksu w calkowitej macierzy
+
+            //1. Calculate index for layout matrix
             var layoutRow = 2 * ((actualIndexInMatrix - 1) / Matrix.GetLength(1));
             var layoutColumn = GetColumn(actualIndexInMatrix);
 
-            //2. Obliczanie sasiadow
-            if (layoutRow != 0 && LayoutMatrix[layoutRow - 1, layoutColumn] != 0)
+            //2. Find neighbours index
+            if (layoutRow != 0 && LayoutMatrix[layoutRow - 1, layoutColumn] != WALL)
                 neighbours.Add(LayoutMatrix[layoutRow - 2, layoutColumn]);
-            if (layoutRow != LayoutMatrix.GetLength(0) - 1 && LayoutMatrix[layoutRow + 1, layoutColumn] != 0)
+            if (layoutRow != LayoutMatrix.GetLength(0) - 1 && LayoutMatrix[layoutRow + 1, layoutColumn] != WALL)
                 neighbours.Add(LayoutMatrix[layoutRow + 2, layoutColumn]);
-            if (layoutColumn != 0 && LayoutMatrix[layoutRow, layoutColumn - 1] != 0)
+            if (layoutColumn != 0 && LayoutMatrix[layoutRow, layoutColumn - 1] != WALL)
                 neighbours.Add(LayoutMatrix[layoutRow, layoutColumn - 2]);
-            if (layoutColumn != LayoutMatrix.GetLength(1) - 1 && LayoutMatrix[layoutRow, layoutColumn + 1] != 0)
+            if (layoutColumn != LayoutMatrix.GetLength(1) - 1 && LayoutMatrix[layoutRow, layoutColumn + 1] != WALL)
                 neighbours.Add(LayoutMatrix[layoutRow, layoutColumn + 2]);
 
             return neighbours;
@@ -51,6 +56,10 @@ namespace Maze_DFS_BFS.Algorithms
 
     public class DFS : SearchAlgorithm
     {
+        private Stack<int> _stack;
+
+        public DFS(int sIndex, int eIndex) : base(sIndex, eIndex) { }
+
         public override void Solve()
         {
             
@@ -59,25 +68,21 @@ namespace Maze_DFS_BFS.Algorithms
 
     public class BFS : SearchAlgorithm
     {
+        public BFS(int sIndex, int eIndex) : base(sIndex, eIndex) { }
+
         public override void Solve()
         {
-            var x = GetPossibleNextMoves(1);
-            var x1 = GetPossibleNextMoves(4);
-            var x2 = GetPossibleNextMoves(5);
-            var x3 = GetPossibleNextMoves(8);
-            var x4 = GetPossibleNextMoves(13);
-            var x5 = GetPossibleNextMoves(16);
-            var x6 = GetPossibleNextMoves(2);
-            var x7 = GetPossibleNextMoves(14);
-            //Implement BFS Algorithm
+
         }
     }
 
     public class A_STAR : SearchAlgorithm
     {
+        public A_STAR(int sIndex, int eIndex) : base(sIndex, eIndex) { }
+
         public override void Solve()
         {
-            //Implement A* Algorithm
+
         }
     }
 }

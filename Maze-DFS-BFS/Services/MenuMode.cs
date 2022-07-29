@@ -26,6 +26,9 @@ namespace Maze_DFS_BFS.Services
         public static SearchMode SearchMode { get; set; } = SearchMode.BFS;
         public static ConfigType ConfigType { get; set; }
 
+        public static int StartPointIndex { get; set; }
+        public static int EndPointIndex { get; set; }
+
         public static Color StartColor { get; set; } = Color.Maroon;
         public static Color FinishColor { get; set; } = Color.Lavender;
     }

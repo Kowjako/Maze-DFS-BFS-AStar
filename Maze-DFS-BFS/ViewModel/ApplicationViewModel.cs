@@ -59,9 +59,9 @@ namespace Maze_DFS_BFS.ViewModel
             Model.MainMatrix = GetMainMatrixFromLayout();
             Model.SolveMaze(MenuMode.SearchMode switch
             {
-                SearchMode.BFS => new BFS(),
-                SearchMode.DFS => new DFS(),
-                SearchMode.A_STAR => new A_STAR(),
+                SearchMode.BFS => new BFS(MenuMode.StartPointIndex, MenuMode.EndPointIndex),
+                SearchMode.DFS => new DFS(MenuMode.StartPointIndex, MenuMode.EndPointIndex),
+                SearchMode.A_STAR => new A_STAR(MenuMode.StartPointIndex, MenuMode.EndPointIndex),
                 _ => throw new InvalidOperationException("Cannot find implementation for this algorithm")
             });
         }

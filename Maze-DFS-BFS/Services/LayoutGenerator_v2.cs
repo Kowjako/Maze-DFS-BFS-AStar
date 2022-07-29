@@ -110,11 +110,13 @@ namespace Maze_DFS_BFS.Services
             {
                 panel.BackColor = MenuMode.StartColor;
                 MenuMode.IsStartPointAssigned = true;
+                MenuMode.StartPointIndex = Convert.ToInt32(panel.Tag);
             }
             if (!MenuMode.IsFinishPointAssigned && MenuMode.ConfigType == ConfigType.AssigningFinish)
             {
                 panel.BackColor = MenuMode.FinishColor;
                 MenuMode.IsFinishPointAssigned = true;
+                MenuMode.EndPointIndex = Convert.ToInt32(panel.Tag);
             }
         }
 
