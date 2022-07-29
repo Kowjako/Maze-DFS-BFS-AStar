@@ -12,8 +12,9 @@ namespace Maze_DFS_BFS.Services
         public int RowNumber { get; set; }
         public int ColumnNumber { get; set; }
 
-        private const int WALL_IDENTIFIER = 0;
+        private const int WALL_SELECTED = 0;
         private const int UNASSIGNED_CELL = -1;
+        private const int WALL_UNSELECTED = -2;
 
         /// <summary>
         /// Metoda tworzy calkowity panel dla algorytmu
@@ -137,12 +138,13 @@ namespace Maze_DFS_BFS.Services
                         }
                         else
                         {
+                            panel.Tag = WALL_UNSELECTED;
                             panel.Click += delegate (object sender, EventArgs e)
                             {
                                 if (MenuMode.ConfigType == ConfigType.DrawingBorders)
                                 {
                                     panel.BackColor = Color.Black;
-                                    panel.Tag = WALL_IDENTIFIER;
+                                    panel.Tag = WALL_SELECTED;
                                 }
                             };
                         }
