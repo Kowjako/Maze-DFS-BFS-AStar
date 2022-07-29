@@ -29,6 +29,7 @@ namespace Maze_DFS_BFS
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainView));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mainMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSelectMatrixSize = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,6 +50,7 @@ namespace Maze_DFS_BFS
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mainMenuItem,
             this.btnConfigurationItem,
@@ -71,6 +73,7 @@ namespace Maze_DFS_BFS
             // 
             // btnSelectMatrixSize
             // 
+            this.btnSelectMatrixSize.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectMatrixSize.Image")));
             this.btnSelectMatrixSize.Name = "btnSelectMatrixSize";
             this.btnSelectMatrixSize.Size = new System.Drawing.Size(218, 22);
             this.btnSelectMatrixSize.Text = "Wskaż rozmiar macierzy";
@@ -82,6 +85,7 @@ namespace Maze_DFS_BFS
             this.btnBFS,
             this.btnDFS,
             this.btnAStar});
+            this.btnSelectSearchType.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectSearchType.Image")));
             this.btnSelectSearchType.Name = "btnSelectSearchType";
             this.btnSelectSearchType.Size = new System.Drawing.Size(218, 22);
             this.btnSelectSearchType.Text = "Wybierz typ przeszukiwania";
@@ -91,26 +95,27 @@ namespace Maze_DFS_BFS
             this.btnBFS.Checked = true;
             this.btnBFS.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnBFS.Name = "btnBFS";
-            this.btnBFS.Size = new System.Drawing.Size(94, 22);
+            this.btnBFS.Size = new System.Drawing.Size(180, 22);
             this.btnBFS.Text = "BFS";
             this.btnBFS.Click += new System.EventHandler(this.btnBFS_Click);
             // 
             // btnDFS
             // 
             this.btnDFS.Name = "btnDFS";
-            this.btnDFS.Size = new System.Drawing.Size(94, 22);
+            this.btnDFS.Size = new System.Drawing.Size(180, 22);
             this.btnDFS.Text = "DFS";
             this.btnDFS.Click += new System.EventHandler(this.btnDFS_Click);
             // 
             // btnAStar
             // 
             this.btnAStar.Name = "btnAStar";
-            this.btnAStar.Size = new System.Drawing.Size(94, 22);
+            this.btnAStar.Size = new System.Drawing.Size(180, 22);
             this.btnAStar.Text = "A*";
             this.btnAStar.Click += new System.EventHandler(this.btnAStar_Click);
             // 
             // btnSolve
             // 
+            this.btnSolve.Image = ((System.Drawing.Image)(resources.GetObject("btnSolve.Image")));
             this.btnSolve.Name = "btnSolve";
             this.btnSolve.Size = new System.Drawing.Size(218, 22);
             this.btnSolve.Text = "Rozwiąż";
@@ -128,6 +133,7 @@ namespace Maze_DFS_BFS
             // 
             // btnSelectStartPoint
             // 
+            this.btnSelectStartPoint.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectStartPoint.Image")));
             this.btnSelectStartPoint.Name = "btnSelectStartPoint";
             this.btnSelectStartPoint.Size = new System.Drawing.Size(201, 22);
             this.btnSelectStartPoint.Text = "Zaznacz punkt startowy";
@@ -135,6 +141,7 @@ namespace Maze_DFS_BFS
             // 
             // btnSelectEndPoint
             // 
+            this.btnSelectEndPoint.Image = ((System.Drawing.Image)(resources.GetObject("btnSelectEndPoint.Image")));
             this.btnSelectEndPoint.Name = "btnSelectEndPoint";
             this.btnSelectEndPoint.Size = new System.Drawing.Size(201, 22);
             this.btnSelectEndPoint.Text = "Zaznacz punkt końcowy";
@@ -142,6 +149,7 @@ namespace Maze_DFS_BFS
             // 
             // btnDrawBorders
             // 
+            this.btnDrawBorders.Image = ((System.Drawing.Image)(resources.GetObject("btnDrawBorders.Image")));
             this.btnDrawBorders.Name = "btnDrawBorders";
             this.btnDrawBorders.Size = new System.Drawing.Size(201, 22);
             this.btnDrawBorders.Text = "Narysuj sciany";
@@ -158,6 +166,7 @@ namespace Maze_DFS_BFS
             // 
             // btnSetStartColor
             // 
+            this.btnSetStartColor.Image = ((System.Drawing.Image)(resources.GetObject("btnSetStartColor.Image")));
             this.btnSetStartColor.Name = "btnSetStartColor";
             this.btnSetStartColor.Size = new System.Drawing.Size(199, 22);
             this.btnSetStartColor.Text = "Kolor węzła startowego";
@@ -165,6 +174,7 @@ namespace Maze_DFS_BFS
             // 
             // btnSetColorFinish
             // 
+            this.btnSetColorFinish.Image = ((System.Drawing.Image)(resources.GetObject("btnSetColorFinish.Image")));
             this.btnSetColorFinish.Name = "btnSetColorFinish";
             this.btnSetColorFinish.Size = new System.Drawing.Size(199, 22);
             this.btnSetColorFinish.Text = "Kolor węzła końcowego";

@@ -87,7 +87,18 @@ namespace Maze_DFS_BFS.ViewModel
 
         private int[,] GetMainMatrixFromLayout()
         {
-            return new int[5, 5];
+            var array = new int[Model.Rows, Model.Columns];
+            var counter = 0;
+
+            for(var i=0;i<Model.Rows;i++)
+            {
+                for(var j=0;j<Model.Columns;j++)
+                {
+                    array[i, j] = ++counter;
+                }
+            }
+
+            return array;
         }
     }
 }

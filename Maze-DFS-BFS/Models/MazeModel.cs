@@ -23,7 +23,7 @@ namespace Maze_DFS_BFS.Models
 
         public List<int> SolveMaze(SearchAlgorithm algorithm)
         {
-            (algorithm.Matrix, algorithm.CompletedMatrix) = (MainMatrix, LayoutMatrix);
+            (algorithm.Matrix, algorithm.LayoutMatrix) = (MainMatrix, LayoutMatrix);
             algorithm.Solve();
             return algorithm.Solution;
         }
