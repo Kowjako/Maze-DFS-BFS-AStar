@@ -32,7 +32,10 @@ namespace Maze_DFS_BFS
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.konfiguracjaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnGenerateGrid = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnSelectStart = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnSelectFinish = new System.Windows.Forms.ToolStripMenuItem();
             this.mainGrid = new Maze_DFS_BFS.DXPanel();
+            this.btnGenerateMaze = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,7 +53,10 @@ namespace Maze_DFS_BFS
             // konfiguracjaToolStripMenuItem
             // 
             this.konfiguracjaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnGenerateGrid});
+            this.btnGenerateGrid,
+            this.btnSelectStart,
+            this.btnSelectFinish,
+            this.btnGenerateMaze});
             this.konfiguracjaToolStripMenuItem.Name = "konfiguracjaToolStripMenuItem";
             this.konfiguracjaToolStripMenuItem.Size = new System.Drawing.Size(86, 20);
             this.konfiguracjaToolStripMenuItem.Text = "Konfiguracja";
@@ -58,9 +64,23 @@ namespace Maze_DFS_BFS
             // btnGenerateGrid
             // 
             this.btnGenerateGrid.Name = "btnGenerateGrid";
-            this.btnGenerateGrid.Size = new System.Drawing.Size(101, 22);
-            this.btnGenerateGrid.Text = "Draw";
+            this.btnGenerateGrid.Size = new System.Drawing.Size(180, 22);
+            this.btnGenerateGrid.Text = "Generuj macierz";
             this.btnGenerateGrid.Click += new System.EventHandler(this.btnGenerateGrid_Click);
+            // 
+            // btnSelectStart
+            // 
+            this.btnSelectStart.Name = "btnSelectStart";
+            this.btnSelectStart.Size = new System.Drawing.Size(180, 22);
+            this.btnSelectStart.Text = "Wskaż początek";
+            this.btnSelectStart.Click += new System.EventHandler(this.btnSelectStart_Click);
+            // 
+            // btnSelectFinish
+            // 
+            this.btnSelectFinish.Name = "btnSelectFinish";
+            this.btnSelectFinish.Size = new System.Drawing.Size(180, 22);
+            this.btnSelectFinish.Text = "Wskaż koniec";
+            this.btnSelectFinish.Click += new System.EventHandler(this.btnSelectFinish_Click);
             // 
             // mainGrid
             // 
@@ -73,6 +93,13 @@ namespace Maze_DFS_BFS
             this.mainGrid.Paint += new System.Windows.Forms.PaintEventHandler(this.mainGrid_Paint);
             this.mainGrid.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainGrid_MouseDown);
             this.mainGrid.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainGrid_MouseMove);
+            // 
+            // btnGenerateMaze
+            // 
+            this.btnGenerateMaze.Name = "btnGenerateMaze";
+            this.btnGenerateMaze.Size = new System.Drawing.Size(180, 22);
+            this.btnGenerateMaze.Text = "Generuj labirynt";
+            this.btnGenerateMaze.Click += new System.EventHandler(this.btnGenerateMaze_Click);
             // 
             // MainView
             // 
@@ -101,6 +128,9 @@ namespace Maze_DFS_BFS
         private System.Windows.Forms.ToolStripMenuItem konfiguracjaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem btnGenerateGrid;
         private DXPanel mainGrid;
+        private System.Windows.Forms.ToolStripMenuItem btnSelectStart;
+        private System.Windows.Forms.ToolStripMenuItem btnSelectFinish;
+        private System.Windows.Forms.ToolStripMenuItem btnGenerateMaze;
     }
 }
 
