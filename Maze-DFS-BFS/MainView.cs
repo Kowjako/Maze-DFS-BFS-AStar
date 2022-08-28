@@ -1,7 +1,4 @@
-﻿using Maze_DFS_BFS.Services;
-using Maze_DFS_BFS.ViewModel;
-using Maze_DFS_BFS.Views;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -9,106 +6,146 @@ namespace Maze_DFS_BFS
 {
     public partial class MainView : Form
     {
-        private readonly ApplicationViewModel _viewModel;
-        private TableLayoutPanel _actualPanel;
+        private int rows, columns;
+
+        private Cell[,] cellGrid;
+        private float CELL_SIZE_X, CELL_SIZE_Y;
+
+        /// <summary>
+        /// Rysowanie granic
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mainGrid_MouseDown(object sender, MouseEventArgs e)
+        {
+            var cell = FindCell(e.X, e.Y);
+            if (cell.Row >= 0 && cell.Row < rows && cell.Column >= 0 && cell.Column < columns)
+            {
+                cellGrid[cell.Row, cell.Column].State = CellState.Border;
+            }
+            mainGrid.Invalidate();
+        }
 
         public MainView()
         {
             InitializeComponent();
-            _viewModel = new ApplicationViewModel();
-            _viewModel.SolutionDone += (e, args) => DrawSolution();
         }
 
-        private void btnSelectMatrixSize_Click(object sender, EventArgs e)
+        private void btnGenerateLayout_Click(object sender, System.EventArgs e)
         {
-            if(_actualPanel != null)
-            {
-                Controls.Remove(_actualPanel);
-            }
-
-            var form = new MatrixSizeForm(_viewModel);
+            //rows = (int)rowNud.Value;
+            //columns = (int)columnNud.Value;
+            cellGrid = new Cell[rows, columns];
+            CalculateCellSize();
+            //mainGrid.Invalidate();
             
-            form.Owner = this;
-            form.StartPosition = FormStartPosition.CenterParent;
+        }
 
-            if(form.ShowDialog() == DialogResult.OK)
+        private void btnGenerateGrid_Click(object sender, EventArgs e)
+        {
+            rows = columns = 50;
+            cellGrid = new Cell[rows, columns];
+            CalculateCellSize();
+            mainGrid.Invalidate();
+        }
+
+        private void mainGrid_Paint(object sender, PaintEventArgs e)
+        {
+            if (rows != 0 && columns != 0)
             {
-                _actualPanel = _viewModel.GenerateStartPanel(ClientSize);
-                Controls.Add(_actualPanel); 
-            }
-            form.Dispose();
-
-            _actualPanel.BringToFront();
-        }
-
-        private void btnSetStartColor_Click(object sender, EventArgs e)
-        {
-            _viewModel.HandleSetColor(0);
-        }
-
-        private void btnSetColorFinish_Click(object sender, EventArgs e)
-        {
-            _viewModel.HandleSetColor(1);
-        }
-
-        private void btnSelectStartPoint_Click(object sender, EventArgs e)
-        {
-            MenuMode.ConfigType = ConfigType.AssigningStart;
-        }
-
-        private void btnSelectEndPoint_Click(object sender, EventArgs e)
-        {
-            MenuMode.ConfigType = ConfigType.AssigningFinish;
-        }
-
-        private void btnDrawBorders_Click(object sender, EventArgs e)
-        {
-            MenuMode.ConfigType = ConfigType.DrawingBorders;
-        }
-
-        private void btnBFS_Click(object sender, EventArgs e)
-        {
-            MenuMode.SearchMode = SearchMode.BFS;
-            var menuItem = sender as ToolStripMenuItem;
-            menuItem.Checked = true;
-            btnDFS.Checked = false;
-            btnAStar.Checked = false;
-        }
-
-        private void btnDFS_Click(object sender, EventArgs e)
-        {
-            MenuMode.SearchMode = SearchMode.DFS;
-            var menuItem = sender as ToolStripMenuItem;
-            menuItem.Checked = true;
-            btnBFS.Checked = false;
-            btnAStar.Checked = false;
-        }
-
-        private void btnAStar_Click(object sender, EventArgs e)
-        {
-            MenuMode.SearchMode = SearchMode.DFS;
-            var menuItem = sender as ToolStripMenuItem;
-            menuItem.Checked = true;
-            btnBFS.Checked = false;
-            btnDFS.Checked = false;
-        }
-
-        private void btnSolve_Click(object sender, EventArgs e)
-        {
-            _viewModel.HandleSolve();
-        }
-
-        private void DrawSolution()
-        {
-            var nodes = _viewModel.MazeSolution;
-            foreach(var control in _actualPanel.Controls)
-            {
-                var panel = control as Panel;
-                if(panel != null && nodes.Contains(Convert.ToInt32(panel.Tag)))
+                for (int i = 0; i < columns; i++)
                 {
-                    panel.BackColor = Color.Silver;
+                    for (int j = 0; j < rows; j++)
+                    {
+                        e.Graphics.FillPolygon(new SolidBrush(Color.White), CalculateSquare(j, i));
+                        if (cellGrid[j, i].State == CellState.Start)
+                        {
+                            e.Graphics.FillPolygon(new SolidBrush(Color.Red), CalculateSquare(j, i));
+                        }
+                        if (cellGrid[i, j].State == CellState.Border)
+                        {
+
+                            e.Graphics.FillPolygon(new SolidBrush(Color.Black), CalculateSquare(j, i));
+                        }
+
+                    }
                 }
             }
         }
+
+        private Point[] CalculateSquare(int row, int column)
+        {
+            return new Point[] {
+                new Point((int)(column * CELL_SIZE_X + 1), (int)(row * CELL_SIZE_Y + 1)),
+                new Point((int)((column + 1)* CELL_SIZE_X - 1), (int)(row * CELL_SIZE_Y + 1)),
+                new Point((int)((column + 1)* CELL_SIZE_X - 1), (int)((row + 1)* CELL_SIZE_Y - 1)),
+                new Point((int)(column * CELL_SIZE_X + 1), (int)((row + 1)* CELL_SIZE_Y - 1))
+            };
+        }
+
+        private void mainGrid_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                var cell = FindCell(e.X, e.Y);
+                if (cell.Row >= 0 && cell.Row < rows && cell.Column >= 0 && cell.Column < columns)
+                {
+                    cellGrid[cell.Row, cell.Column].State = CellState.Border;
+                }
+                mainGrid.Invalidate();
+            }
+            
+        }
+
+        private void CalculateCellSize()
+        {
+            CELL_SIZE_X = (float)((double)700 / columns);
+            CELL_SIZE_Y = (float)((double)700 / rows);
+
+            for (int i = 0; i < columns; i++)
+            {
+                for (int j = 0; j < rows; j++)
+                {
+                    if (i == 5 && j == 5)
+                    {
+                        cellGrid[j, i] = new Cell(i, j, CellState.Start);
+                    }
+                    else
+                    {
+                        cellGrid[j, i] = new Cell(i, j, CellState.Unassigned);
+                    }
+                }
+            }
+        }
+
+        private Cell FindCell(int x, int y)
+        {
+            return new Cell(x: (int)Math.Floor(x / CELL_SIZE_X),
+                            y: (int)Math.Floor(y / CELL_SIZE_Y),
+                            state: CellState.Border);
+        }
+
+    }
+
+    public struct Cell
+    {
+        public int Row { get; set; }
+        public int Column { get; set; }
+        public CellState State { get; set; }
+
+        public Cell(int x, int y, CellState state)
+        {
+            Row = x;
+            Column = y;
+            State = state;
+        }
+    }
+
+    public enum CellState
+    {
+        Border,
+        Start,
+        Finish,
+        Unassigned
     }
 }
