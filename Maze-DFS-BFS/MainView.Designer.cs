@@ -34,8 +34,12 @@ namespace Maze_DFS_BFS
             this.btnGenerateGrid = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSelectStart = new System.Windows.Forms.ToolStripMenuItem();
             this.btnSelectFinish = new System.Windows.Forms.ToolStripMenuItem();
-            this.mainGrid = new Maze_DFS_BFS.DXPanel();
             this.btnGenerateMaze = new System.Windows.Forms.ToolStripMenuItem();
+            this.rozwiążLabiryntToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dfsBtnSolve = new System.Windows.Forms.ToolStripMenuItem();
+            this.bfsBtnSolve = new System.Windows.Forms.ToolStripMenuItem();
+            this.astarBtnSolve = new System.Windows.Forms.ToolStripMenuItem();
+            this.mainGrid = new Maze_DFS_BFS.DXPanel();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,7 +60,8 @@ namespace Maze_DFS_BFS
             this.btnGenerateGrid,
             this.btnSelectStart,
             this.btnSelectFinish,
-            this.btnGenerateMaze});
+            this.btnGenerateMaze,
+            this.rozwiążLabiryntToolStripMenuItem});
             this.konfiguracjaToolStripMenuItem.Name = "konfiguracjaToolStripMenuItem";
             this.konfiguracjaToolStripMenuItem.Size = new System.Drawing.Size(86, 20);
             this.konfiguracjaToolStripMenuItem.Text = "Konfiguracja";
@@ -82,6 +87,44 @@ namespace Maze_DFS_BFS
             this.btnSelectFinish.Text = "Wskaż koniec";
             this.btnSelectFinish.Click += new System.EventHandler(this.btnSelectFinish_Click);
             // 
+            // btnGenerateMaze
+            // 
+            this.btnGenerateMaze.Name = "btnGenerateMaze";
+            this.btnGenerateMaze.Size = new System.Drawing.Size(180, 22);
+            this.btnGenerateMaze.Text = "Generuj labirynt";
+            this.btnGenerateMaze.Click += new System.EventHandler(this.btnGenerateMaze_Click);
+            // 
+            // rozwiążLabiryntToolStripMenuItem
+            // 
+            this.rozwiążLabiryntToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.dfsBtnSolve,
+            this.bfsBtnSolve,
+            this.astarBtnSolve});
+            this.rozwiążLabiryntToolStripMenuItem.Name = "rozwiążLabiryntToolStripMenuItem";
+            this.rozwiążLabiryntToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rozwiążLabiryntToolStripMenuItem.Text = "Rozwiąż labirynt";
+            // 
+            // dfsBtnSolve
+            // 
+            this.dfsBtnSolve.Name = "dfsBtnSolve";
+            this.dfsBtnSolve.Size = new System.Drawing.Size(180, 22);
+            this.dfsBtnSolve.Text = "DFS";
+            this.dfsBtnSolve.Click += new System.EventHandler(this.dfsBtnSolve_Click);
+            // 
+            // bfsBtnSolve
+            // 
+            this.bfsBtnSolve.Name = "bfsBtnSolve";
+            this.bfsBtnSolve.Size = new System.Drawing.Size(180, 22);
+            this.bfsBtnSolve.Text = "BFS";
+            this.bfsBtnSolve.Click += new System.EventHandler(this.bfsBtnSolve_Click);
+            // 
+            // astarBtnSolve
+            // 
+            this.astarBtnSolve.Name = "astarBtnSolve";
+            this.astarBtnSolve.Size = new System.Drawing.Size(180, 22);
+            this.astarBtnSolve.Text = "A*";
+            this.astarBtnSolve.Click += new System.EventHandler(this.astarBtnSolve_Click);
+            // 
             // mainGrid
             // 
             this.mainGrid.BackColor = System.Drawing.SystemColors.ControlDark;
@@ -93,13 +136,6 @@ namespace Maze_DFS_BFS
             this.mainGrid.Paint += new System.Windows.Forms.PaintEventHandler(this.mainGrid_Paint);
             this.mainGrid.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainGrid_MouseDown);
             this.mainGrid.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainGrid_MouseMove);
-            // 
-            // btnGenerateMaze
-            // 
-            this.btnGenerateMaze.Name = "btnGenerateMaze";
-            this.btnGenerateMaze.Size = new System.Drawing.Size(180, 22);
-            this.btnGenerateMaze.Text = "Generuj labirynt";
-            this.btnGenerateMaze.Click += new System.EventHandler(this.btnGenerateMaze_Click);
             // 
             // MainView
             // 
@@ -131,6 +167,10 @@ namespace Maze_DFS_BFS
         private System.Windows.Forms.ToolStripMenuItem btnSelectStart;
         private System.Windows.Forms.ToolStripMenuItem btnSelectFinish;
         private System.Windows.Forms.ToolStripMenuItem btnGenerateMaze;
+        private System.Windows.Forms.ToolStripMenuItem rozwiążLabiryntToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dfsBtnSolve;
+        private System.Windows.Forms.ToolStripMenuItem bfsBtnSolve;
+        private System.Windows.Forms.ToolStripMenuItem astarBtnSolve;
     }
 }
 

@@ -14,6 +14,7 @@ namespace Maze_DFS_BFS
         private Cell[,] cellGrid;
         private float CELL_SIZE_X, CELL_SIZE_Y;
         private bool startWasAssigned, finishWasAssigned;
+        private Point startPoint, endPoint;
 
         /// <summary>
         /// Rysowanie granic
@@ -41,11 +42,13 @@ namespace Maze_DFS_BFS
                     if(Mode == Mode.AssignStart)
                     {
                         cellGrid[cell.Row, cell.Column].State = CellState.Start;
+                        startPoint = new Point(cell.Row, cell.Column);
                         startWasAssigned = true;
                     }
                     else
                     {
                         cellGrid[cell.Row, cell.Column].State = CellState.Finish;
+                        endPoint = new Point(cell.Row, cell.Column);
                         finishWasAssigned = true;
                     }
                     Mode = Mode.None;
@@ -90,7 +93,7 @@ namespace Maze_DFS_BFS
                 {
                     for (int j = 0; j < rows; j++)
                     {
-                        e.Graphics.FillPolygon(CellBrushMapper.GetBrush(cellGrid[i, j].State), CalculateSquare(j, i));
+                        e.Graphics.FillPolygon(CellBrushMapper.GetBrush(cellGrid[j, i].State), CalculateSquare(j, i));
                     }
                 }
             }
@@ -162,10 +165,25 @@ namespace Maze_DFS_BFS
             }
         }
 
+        private void dfsBtnSolve_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void bfsBtnSolve_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void astarBtnSolve_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private Cell FindCell(int x, int y)
         {
-            return new Cell(x: (int)Math.Floor(x / CELL_SIZE_X),
-                            y: (int)Math.Floor(y / CELL_SIZE_Y),
+            return new Cell(y: (int)Math.Floor(x / CELL_SIZE_X),
+                            x: (int)Math.Floor(y / CELL_SIZE_Y),
                             state: CellState.Border);
         }
 
@@ -205,7 +223,8 @@ namespace Maze_DFS_BFS
         Border,
         Start,
         Finish,
-        Unassigned
+        Unassigned,
+        Solution
     }
 
     public enum Mode
