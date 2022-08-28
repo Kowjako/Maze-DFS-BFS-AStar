@@ -1,6 +1,8 @@
 ﻿using Maze_DFS_BFS.Helpers;
+using Maze_DFS_BFS.Models;
 using System;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Maze_DFS_BFS
@@ -130,7 +132,20 @@ namespace Maze_DFS_BFS
 
         private void btnGenerateMaze_Click(object sender, EventArgs e)
         {
-
+            ClearCells();
+            var maze = new MazeGenerator(rows, columns);
+            var cells = maze.GenerateMaze();
+            for (int r = 0; r<rows; r++)
+            {
+                for(int c = 0;c<columns; c++)
+                {
+                    if (!cells[r,c])
+                    {
+                        cellGrid[r, c].State = CellState.Border;
+                    }
+                }
+            }
+            mainGrid.Invalidate();
         }
 
         private void CalculateCellSize()
@@ -160,6 +175,13 @@ namespace Maze_DFS_BFS
             CELL_SIZE_X = CELL_SIZE_Y = 0;
             Mode = Mode.None;
             startWasAssigned = finishWasAssigned = false;
+        }
+
+        private void ClearCells()
+        {
+            for (var r = 0; r < rows; r++)
+                for (var c = 0; c < columns; c++)
+                    cellGrid[r, c].State = CellState.Unassigned;
         }
 
     }
