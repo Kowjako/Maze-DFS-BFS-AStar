@@ -17,7 +17,9 @@ namespace Maze_DFS_BFS
         private bool startWasAssigned, finishWasAssigned;
         private Cell startPoint, endPoint;
         private List<Cell> _solutionCells, _visitedNodes;
+        private List<Cell> closedSet = new List<Cell>();
         private Algorithm Algorithm;
+
 
         #region DFS vars
 
@@ -175,7 +177,7 @@ namespace Maze_DFS_BFS
             {
                 for (int j = 0; j < rows; j++)
                 {
-                    cellGrid[j, i] = new Cell(i, j, CellState.Unassigned);
+                    cellGrid[j, i] = new Cell(i, j, CellState.Unassigned,0,0);
                 }
             }
         }
@@ -188,9 +190,28 @@ namespace Maze_DFS_BFS
             stack = new Stack<Cell>();
 
             var neighbours = NeighboursHelper.GetPossibleNeighbours(cellGrid, startPoint);
+
             foreach (var n in neighbours)
             {
                 if (!stack.Contains(n)) stack.Push(n);
+            }
+
+            animationTimer.Start();
+        }
+
+        private void bfsBtnSolve_Click(object sender, EventArgs e)
+        {
+            Algorithm = Algorithm.BFS;
+            _solutionCells = new List<Cell>();
+            _visitedNodes = new List<Cell>();
+            queue = new Queue<Cell>();
+
+            var neighbours = NeighboursHelper.GetPossibleNeighbours(cellGrid, startPoint);
+            neighbours.Reverse();
+
+            foreach (var n in neighbours)
+            {
+                if (!queue.Contains(n)) queue.Enqueue(n);
             }
 
             animationTimer.Start();
@@ -213,8 +234,10 @@ namespace Maze_DFS_BFS
                     var nextCell = stack.Pop();
 
                     _visitedNodes.Add(nextCell);
+
                     var moves = NeighboursHelper.GetPossibleNeighbours(cellGrid, nextCell);
                     moves = moves.Except(_visitedNodes);
+
                     foreach (var m in moves)
                     {
                         if (!stack.Contains(m)) stack.Push(m);
@@ -222,7 +245,10 @@ namespace Maze_DFS_BFS
                 }
                 else
                 {
+                    var end = stack.First(p => p.Row == endPoint.Row && p.Column == endPoint.Column);
+                    (endPoint.Prev_Row, endPoint.Prev_Col) = (end.Prev_Row, end.Prev_Col);
                     animationTimer.Stop();
+                    ShowSolution();
                 }
             }
             else if (Algorithm == Algorithm.BFS)
@@ -232,8 +258,10 @@ namespace Maze_DFS_BFS
                     var item = queue.Dequeue();
 
                     _visitedNodes.Add(item);
+
                     var moves = NeighboursHelper.GetPossibleNeighbours(cellGrid, item);
                     moves = moves.Except(_visitedNodes);
+
                     foreach (var m in moves)
                     {
                         if (!queue.Contains(m)) queue.Enqueue(m);
@@ -241,34 +269,35 @@ namespace Maze_DFS_BFS
                 }
                 else
                 {
+                    var end = queue.First(p => p.Row == endPoint.Row && p.Column == endPoint.Column);
+                    (endPoint.Prev_Row, endPoint.Prev_Col) = (end.Prev_Row, end.Prev_Col);
                     animationTimer.Stop();
+                    ShowSolution();
                 }
             }
+            else if (Algorithm == Algorithm.A)
+            {
 
+            }
+            
             mainGrid.Invalidate();
         }
 
-        private void bfsBtnSolve_Click(object sender, EventArgs e)
+        private void ShowSolution()
         {
-            Algorithm = Algorithm.BFS;
-            _solutionCells = new List<Cell>();
-            _visitedNodes = new List<Cell>();
-            queue = new Queue<Cell>();
-
-            var neighbours = NeighboursHelper.GetPossibleNeighbours(cellGrid, startPoint);
-            neighbours.Reverse();
-
-            foreach (var n in neighbours)
+            Cell curr = endPoint;
+            do
             {
-                if (!queue.Contains(n)) queue.Enqueue(n);
+                curr = _visitedNodes.FirstOrDefault(p => p.Column == curr.Prev_Col && p.Row == curr.Prev_Row);
+                cellGrid[curr.Row, curr.Column].State = CellState.Solution;
             }
-
-            animationTimer.Start();
+            while (curr.Row != startPoint.Row || curr.Column != startPoint.Column);
+            cellGrid[startPoint.Row, startPoint.Column].State = CellState.Start;
+            mainGrid.Invalidate();
         }
 
         private void astarBtnSolve_Click(object sender, EventArgs e)
         {
-
             Algorithm = Algorithm.A;
             animationTimer.Start();
         }
@@ -277,7 +306,7 @@ namespace Maze_DFS_BFS
         {
             return new Cell(y: (int)Math.Floor(x / CELL_SIZE_X),
                             x: (int)Math.Floor(y / CELL_SIZE_Y),
-                            state: CellState.Border);
+                            state: CellState.Border, prev_r:0, prev_c:0);
         }
 
         private void PerformClearing()
@@ -303,11 +332,17 @@ namespace Maze_DFS_BFS
         public int Column { get; set; }
         public CellState State { get; set; }
 
-        public Cell(int x, int y, CellState state)
+        public int Prev_Col { get; set; }
+        public int Prev_Row { get; set; }
+
+
+        public Cell(int x, int y, CellState state, int prev_r, int prev_c)
         {
             Row = x;
             Column = y;
             State = state;
+            Prev_Col = prev_c;
+            Prev_Row = prev_r;
         }
     }
 
