@@ -1,8 +1,9 @@
 ﻿using Maze_DFS_BFS.Helpers;
 using Maze_DFS_BFS.Models;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Text.RegularExpressions;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Maze_DFS_BFS
@@ -14,7 +15,21 @@ namespace Maze_DFS_BFS
         private Cell[,] cellGrid;
         private float CELL_SIZE_X, CELL_SIZE_Y;
         private bool startWasAssigned, finishWasAssigned;
-        private Point startPoint, endPoint;
+        private Cell startPoint, endPoint;
+        private List<Cell> _solutionCells, _visitedNodes;
+        private Algorithm Algorithm;
+
+        #region DFS vars
+
+        private Stack<Cell> stack;
+
+        #endregion
+
+        #region BFS vars
+
+        private Queue<Cell> queue;
+
+        #endregion
 
         /// <summary>
         /// Rysowanie granic
@@ -42,13 +57,13 @@ namespace Maze_DFS_BFS
                     if(Mode == Mode.AssignStart)
                     {
                         cellGrid[cell.Row, cell.Column].State = CellState.Start;
-                        startPoint = new Point(cell.Row, cell.Column);
+                        startPoint = cell;
                         startWasAssigned = true;
                     }
                     else
                     {
                         cellGrid[cell.Row, cell.Column].State = CellState.Finish;
-                        endPoint = new Point(cell.Row, cell.Column);
+                        endPoint = cell;
                         finishWasAssigned = true;
                     }
                     Mode = Mode.None;
@@ -167,17 +182,95 @@ namespace Maze_DFS_BFS
 
         private void dfsBtnSolve_Click(object sender, EventArgs e)
         {
+            Algorithm = Algorithm.DFS;
+            _solutionCells = new List<Cell>();
+            _visitedNodes = new List<Cell>();
+            stack = new Stack<Cell>();
 
+            var neighbours = NeighboursHelper.GetPossibleNeighbours(cellGrid, startPoint);
+            foreach (var n in neighbours)
+            {
+                if (!stack.Contains(n)) stack.Push(n);
+            }
+
+            animationTimer.Start();
+        }
+
+        private void animationTimer_Tick(object sender, EventArgs e)
+        {
+            foreach(var n in _visitedNodes)
+            {
+                if ((n.Row == endPoint.Row && n.Column == endPoint.Column) ||
+                    (n.Row == startPoint.Row && n.Column == startPoint.Column)) continue;
+                        
+                cellGrid[n.Row, n.Column].State = CellState.Visited;
+            }
+
+            if (Algorithm == Algorithm.DFS)
+            {
+                if (!stack.Any(p => p.Row == endPoint.Row && p.Column == endPoint.Column))
+                {
+                    var nextCell = stack.Pop();
+
+                    _visitedNodes.Add(nextCell);
+                    var moves = NeighboursHelper.GetPossibleNeighbours(cellGrid, nextCell);
+                    moves = moves.Except(_visitedNodes);
+                    foreach (var m in moves)
+                    {
+                        if (!stack.Contains(m)) stack.Push(m);
+                    }
+                }
+                else
+                {
+                    animationTimer.Stop();
+                }
+            }
+            else if (Algorithm == Algorithm.BFS)
+            {
+                if (!queue.Any(p => p.Row == endPoint.Row && p.Column == endPoint.Column))
+                {
+                    var item = queue.Dequeue();
+
+                    _visitedNodes.Add(item);
+                    var moves = NeighboursHelper.GetPossibleNeighbours(cellGrid, item);
+                    moves = moves.Except(_visitedNodes);
+                    foreach (var m in moves)
+                    {
+                        if (!queue.Contains(m)) queue.Enqueue(m);
+                    }
+                }
+                else
+                {
+                    animationTimer.Stop();
+                }
+            }
+
+            mainGrid.Invalidate();
         }
 
         private void bfsBtnSolve_Click(object sender, EventArgs e)
         {
+            Algorithm = Algorithm.BFS;
+            _solutionCells = new List<Cell>();
+            _visitedNodes = new List<Cell>();
+            queue = new Queue<Cell>();
 
+            var neighbours = NeighboursHelper.GetPossibleNeighbours(cellGrid, startPoint);
+            neighbours.Reverse();
+
+            foreach (var n in neighbours)
+            {
+                if (!queue.Contains(n)) queue.Enqueue(n);
+            }
+
+            animationTimer.Start();
         }
 
         private void astarBtnSolve_Click(object sender, EventArgs e)
         {
 
+            Algorithm = Algorithm.A;
+            animationTimer.Start();
         }
 
         private Cell FindCell(int x, int y)
@@ -224,7 +317,8 @@ namespace Maze_DFS_BFS
         Start,
         Finish,
         Unassigned,
-        Solution
+        Solution,
+        Visited
     }
 
     public enum Mode
@@ -232,5 +326,10 @@ namespace Maze_DFS_BFS
         AssignStart,
         AssignFinish,
         None
+    }
+
+    public enum Algorithm
+    {
+        DFS, BFS, A
     }
 }

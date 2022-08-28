@@ -29,6 +29,7 @@ namespace Maze_DFS_BFS
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.konfiguracjaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnGenerateGrid = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,6 +41,7 @@ namespace Maze_DFS_BFS
             this.bfsBtnSolve = new System.Windows.Forms.ToolStripMenuItem();
             this.astarBtnSolve = new System.Windows.Forms.ToolStripMenuItem();
             this.mainGrid = new Maze_DFS_BFS.DXPanel();
+            this.animationTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,28 +71,28 @@ namespace Maze_DFS_BFS
             // btnGenerateGrid
             // 
             this.btnGenerateGrid.Name = "btnGenerateGrid";
-            this.btnGenerateGrid.Size = new System.Drawing.Size(180, 22);
+            this.btnGenerateGrid.Size = new System.Drawing.Size(159, 22);
             this.btnGenerateGrid.Text = "Generuj macierz";
             this.btnGenerateGrid.Click += new System.EventHandler(this.btnGenerateGrid_Click);
             // 
             // btnSelectStart
             // 
             this.btnSelectStart.Name = "btnSelectStart";
-            this.btnSelectStart.Size = new System.Drawing.Size(180, 22);
+            this.btnSelectStart.Size = new System.Drawing.Size(159, 22);
             this.btnSelectStart.Text = "Wskaż początek";
             this.btnSelectStart.Click += new System.EventHandler(this.btnSelectStart_Click);
             // 
             // btnSelectFinish
             // 
             this.btnSelectFinish.Name = "btnSelectFinish";
-            this.btnSelectFinish.Size = new System.Drawing.Size(180, 22);
+            this.btnSelectFinish.Size = new System.Drawing.Size(159, 22);
             this.btnSelectFinish.Text = "Wskaż koniec";
             this.btnSelectFinish.Click += new System.EventHandler(this.btnSelectFinish_Click);
             // 
             // btnGenerateMaze
             // 
             this.btnGenerateMaze.Name = "btnGenerateMaze";
-            this.btnGenerateMaze.Size = new System.Drawing.Size(180, 22);
+            this.btnGenerateMaze.Size = new System.Drawing.Size(159, 22);
             this.btnGenerateMaze.Text = "Generuj labirynt";
             this.btnGenerateMaze.Click += new System.EventHandler(this.btnGenerateMaze_Click);
             // 
@@ -101,27 +103,27 @@ namespace Maze_DFS_BFS
             this.bfsBtnSolve,
             this.astarBtnSolve});
             this.rozwiążLabiryntToolStripMenuItem.Name = "rozwiążLabiryntToolStripMenuItem";
-            this.rozwiążLabiryntToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rozwiążLabiryntToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.rozwiążLabiryntToolStripMenuItem.Text = "Rozwiąż labirynt";
             // 
             // dfsBtnSolve
             // 
             this.dfsBtnSolve.Name = "dfsBtnSolve";
-            this.dfsBtnSolve.Size = new System.Drawing.Size(180, 22);
+            this.dfsBtnSolve.Size = new System.Drawing.Size(94, 22);
             this.dfsBtnSolve.Text = "DFS";
             this.dfsBtnSolve.Click += new System.EventHandler(this.dfsBtnSolve_Click);
             // 
             // bfsBtnSolve
             // 
             this.bfsBtnSolve.Name = "bfsBtnSolve";
-            this.bfsBtnSolve.Size = new System.Drawing.Size(180, 22);
+            this.bfsBtnSolve.Size = new System.Drawing.Size(94, 22);
             this.bfsBtnSolve.Text = "BFS";
             this.bfsBtnSolve.Click += new System.EventHandler(this.bfsBtnSolve_Click);
             // 
             // astarBtnSolve
             // 
             this.astarBtnSolve.Name = "astarBtnSolve";
-            this.astarBtnSolve.Size = new System.Drawing.Size(180, 22);
+            this.astarBtnSolve.Size = new System.Drawing.Size(94, 22);
             this.astarBtnSolve.Text = "A*";
             this.astarBtnSolve.Click += new System.EventHandler(this.astarBtnSolve_Click);
             // 
@@ -136,6 +138,10 @@ namespace Maze_DFS_BFS
             this.mainGrid.Paint += new System.Windows.Forms.PaintEventHandler(this.mainGrid_Paint);
             this.mainGrid.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainGrid_MouseDown);
             this.mainGrid.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainGrid_MouseMove);
+            // 
+            // animationTimer
+            // 
+            this.animationTimer.Tick += new System.EventHandler(this.animationTimer_Tick);
             // 
             // MainView
             // 
@@ -171,6 +177,7 @@ namespace Maze_DFS_BFS
         private System.Windows.Forms.ToolStripMenuItem dfsBtnSolve;
         private System.Windows.Forms.ToolStripMenuItem bfsBtnSolve;
         private System.Windows.Forms.ToolStripMenuItem astarBtnSolve;
+        private System.Windows.Forms.Timer animationTimer;
     }
 }
 
