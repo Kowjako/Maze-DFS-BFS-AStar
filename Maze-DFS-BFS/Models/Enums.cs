@@ -20,6 +20,6 @@
 
     public enum Algorithm
     {
-        DFS, BFS
+        DFS, BFS, A_STAR
     }
 }

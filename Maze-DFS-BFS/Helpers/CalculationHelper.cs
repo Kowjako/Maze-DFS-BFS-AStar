@@ -17,5 +17,9 @@ namespace Maze_DFS_BFS.Helpers
                 new Point((int)((column + 1)* CELL_SIZE_X - 1), (int)((row + 1)* CELL_SIZE_Y - 1)),
                 new Point((int)(column * CELL_SIZE_X + 1), (int)((row + 1)* CELL_SIZE_Y - 1))
             };
+
+        public static int HeuristicDistance(Cell start, Cell goal) =>
+            Math.Abs(start.Row + goal.Row) + Math.Abs(start.Column + goal.Column);
+
     }
 }

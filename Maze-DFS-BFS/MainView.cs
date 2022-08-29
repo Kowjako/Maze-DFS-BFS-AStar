@@ -259,6 +259,11 @@ namespace Maze_DFS_BFS
             animationTimer.Start();
         }
 
+        private void astartBtnSolve_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void animationTimer_Tick(object sender, EventArgs e)
         {
             foreach (var n in _visitedNodes)
@@ -269,6 +274,7 @@ namespace Maze_DFS_BFS
                 cellGrid[n.Row, n.Column].State = CellState.Visited;
             }
 
+            // Kazdy krok poszczegolnych algorytmow
             if (Algorithm == Algorithm.DFS)
             {
                 if (!stack.Any(p => p.Row == endPoint.Row && p.Column == endPoint.Column))
@@ -318,6 +324,10 @@ namespace Maze_DFS_BFS
                     animationTimer.Stop();
                     ShowSolution();
                 }
+            }
+            else if (Algorithm == Algorithm.A_STAR)
+            {
+
             }
 
             mainGrid.Invalidate();
