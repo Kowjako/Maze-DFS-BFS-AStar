@@ -12,7 +12,8 @@ namespace Maze_DFS_BFS.Helpers
             { CellState.Border, new SolidBrush(Color.Black) },
             { CellState.Finish, new SolidBrush(Color.Blue) },
             { CellState.Solution, new SolidBrush(Color.Green) },
-            { CellState.Visited, new SolidBrush(Color.Yellow) }
+            { CellState.Visited, new SolidBrush(Color.Yellow) },
+            { CellState.Current, new SolidBrush(Color.Purple) }
         };
 
         public static SolidBrush GetBrush(CellState state) => _stateBrushMap[state];

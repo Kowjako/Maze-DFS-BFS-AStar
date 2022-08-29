@@ -39,7 +39,6 @@ namespace Maze_DFS_BFS
             this.rozwiążLabiryntToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dfsBtnSolve = new System.Windows.Forms.ToolStripMenuItem();
             this.bfsBtnSolve = new System.Windows.Forms.ToolStripMenuItem();
-            this.astarBtnSolve = new System.Windows.Forms.ToolStripMenuItem();
             this.mainGrid = new Maze_DFS_BFS.DXPanel();
             this.animationTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
@@ -100,8 +99,7 @@ namespace Maze_DFS_BFS
             // 
             this.rozwiążLabiryntToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.dfsBtnSolve,
-            this.bfsBtnSolve,
-            this.astarBtnSolve});
+            this.bfsBtnSolve});
             this.rozwiążLabiryntToolStripMenuItem.Name = "rozwiążLabiryntToolStripMenuItem";
             this.rozwiążLabiryntToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.rozwiążLabiryntToolStripMenuItem.Text = "Rozwiąż labirynt";
@@ -120,13 +118,6 @@ namespace Maze_DFS_BFS
             this.bfsBtnSolve.Text = "BFS";
             this.bfsBtnSolve.Click += new System.EventHandler(this.bfsBtnSolve_Click);
             // 
-            // astarBtnSolve
-            // 
-            this.astarBtnSolve.Name = "astarBtnSolve";
-            this.astarBtnSolve.Size = new System.Drawing.Size(94, 22);
-            this.astarBtnSolve.Text = "A*";
-            this.astarBtnSolve.Click += new System.EventHandler(this.astarBtnSolve_Click);
-            // 
             // mainGrid
             // 
             this.mainGrid.BackColor = System.Drawing.SystemColors.ControlDark;
@@ -141,6 +132,7 @@ namespace Maze_DFS_BFS
             // 
             // animationTimer
             // 
+            this.animationTimer.Interval = 20;
             this.animationTimer.Tick += new System.EventHandler(this.animationTimer_Tick);
             // 
             // MainView
@@ -176,7 +168,6 @@ namespace Maze_DFS_BFS
         private System.Windows.Forms.ToolStripMenuItem rozwiążLabiryntToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dfsBtnSolve;
         private System.Windows.Forms.ToolStripMenuItem bfsBtnSolve;
-        private System.Windows.Forms.ToolStripMenuItem astarBtnSolve;
         private System.Windows.Forms.Timer animationTimer;
     }
 }

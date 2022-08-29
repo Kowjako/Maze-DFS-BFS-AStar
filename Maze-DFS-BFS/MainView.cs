@@ -1,7 +1,9 @@
 ﻿using Maze_DFS_BFS.Helpers;
 using Maze_DFS_BFS.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -16,10 +18,8 @@ namespace Maze_DFS_BFS
         private float CELL_SIZE_X, CELL_SIZE_Y;
         private bool startWasAssigned, finishWasAssigned;
         private Cell startPoint, endPoint;
-        private List<Cell> _solutionCells, _visitedNodes;
-        private List<Cell> closedSet = new List<Cell>();
+        private List<Cell> _visitedNodes;
         private Algorithm Algorithm;
-
 
         #region DFS vars
 
@@ -77,16 +77,6 @@ namespace Maze_DFS_BFS
         public MainView()
         {
             InitializeComponent();
-        }
-
-        private void btnGenerateLayout_Click(object sender, System.EventArgs e)
-        {
-            //rows = (int)rowNud.Value;
-            //columns = (int)columnNud.Value;
-            cellGrid = new Cell[rows, columns];
-            CalculateCellSize();
-            //mainGrid.Invalidate();
-            
         }
 
         private void btnGenerateGrid_Click(object sender, EventArgs e)
@@ -185,7 +175,6 @@ namespace Maze_DFS_BFS
         private void dfsBtnSolve_Click(object sender, EventArgs e)
         {
             Algorithm = Algorithm.DFS;
-            _solutionCells = new List<Cell>();
             _visitedNodes = new List<Cell>();
             stack = new Stack<Cell>();
 
@@ -202,7 +191,6 @@ namespace Maze_DFS_BFS
         private void bfsBtnSolve_Click(object sender, EventArgs e)
         {
             Algorithm = Algorithm.BFS;
-            _solutionCells = new List<Cell>();
             _visitedNodes = new List<Cell>();
             queue = new Queue<Cell>();
 
@@ -232,6 +220,7 @@ namespace Maze_DFS_BFS
                 if (!stack.Any(p => p.Row == endPoint.Row && p.Column == endPoint.Column))
                 {
                     var nextCell = stack.Pop();
+                    cellGrid[nextCell.Row, nextCell.Column].State = CellState.Current;
 
                     _visitedNodes.Add(nextCell);
 
@@ -242,6 +231,7 @@ namespace Maze_DFS_BFS
                     {
                         if (!stack.Contains(m)) stack.Push(m);
                     }
+                    if (stack.Distinct().Count() != stack.Count) MessageBox.Show("FUCK DUPLICATES");
                 }
                 else
                 {
@@ -256,6 +246,7 @@ namespace Maze_DFS_BFS
                 if (!queue.Any(p => p.Row == endPoint.Row && p.Column == endPoint.Column))
                 {
                     var item = queue.Dequeue();
+                    cellGrid[item.Row, item.Column].State = CellState.Current;
 
                     _visitedNodes.Add(item);
 
@@ -275,10 +266,6 @@ namespace Maze_DFS_BFS
                     ShowSolution();
                 }
             }
-            else if (Algorithm == Algorithm.A)
-            {
-
-            }
             
             mainGrid.Invalidate();
         }
@@ -289,17 +276,12 @@ namespace Maze_DFS_BFS
             do
             {
                 curr = _visitedNodes.FirstOrDefault(p => p.Column == curr.Prev_Col && p.Row == curr.Prev_Row);
+                if (curr.Row == 0 || curr.Column == 0) break;
                 cellGrid[curr.Row, curr.Column].State = CellState.Solution;
             }
             while (curr.Row != startPoint.Row || curr.Column != startPoint.Column);
             cellGrid[startPoint.Row, startPoint.Column].State = CellState.Start;
             mainGrid.Invalidate();
-        }
-
-        private void astarBtnSolve_Click(object sender, EventArgs e)
-        {
-            Algorithm = Algorithm.A;
-            animationTimer.Start();
         }
 
         private Cell FindCell(int x, int y)
@@ -353,7 +335,8 @@ namespace Maze_DFS_BFS
         Finish,
         Unassigned,
         Solution,
-        Visited
+        Visited,
+        Current
     }
 
     public enum Mode
@@ -365,6 +348,6 @@ namespace Maze_DFS_BFS
 
     public enum Algorithm
     {
-        DFS, BFS, A
+        DFS, BFS
     }
 }
