@@ -1,10 +1,7 @@
 ﻿using Maze_DFS_BFS.Helpers;
 using Maze_DFS_BFS.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -12,6 +9,8 @@ namespace Maze_DFS_BFS
 {
     public partial class MainView : Form
     {
+        #region Common
+
         private int rows, columns;
         private Mode Mode = Mode.None;
         private Cell[,] cellGrid;
@@ -20,6 +19,9 @@ namespace Maze_DFS_BFS
         private Cell startPoint, endPoint;
         private List<Cell> _visitedNodes;
         private Algorithm Algorithm;
+        private CellEqualityComparer _comparer;
+
+        #endregion
 
         #region DFS vars
 
@@ -33,14 +35,16 @@ namespace Maze_DFS_BFS
 
         #endregion
 
+        #region Drawing
+
         /// <summary>
-        /// Rysowanie granic
+        /// Reczne rysowanie granic przed animacja
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void mainGrid_MouseDown(object sender, MouseEventArgs e)
         {
-            var cell = FindCell(e.X, e.Y);
+            var cell = CalculationHelper.FindCell(e.X, e.Y, CELL_SIZE_X, CELL_SIZE_Y);
             if (cell.Row >= 0 && cell.Row < rows && cell.Column >= 0 && cell.Column < columns)
             {
                 if (Mode == Mode.None)
@@ -56,7 +60,7 @@ namespace Maze_DFS_BFS
                 }
                 else
                 {
-                    if(Mode == Mode.AssignStart)
+                    if (Mode == Mode.AssignStart)
                     {
                         cellGrid[cell.Row, cell.Column].State = CellState.Start;
                         startPoint = cell;
@@ -74,24 +78,11 @@ namespace Maze_DFS_BFS
             mainGrid.Invalidate();
         }
 
-        public MainView()
-        {
-            InitializeComponent();
-        }
-
-        private void btnGenerateGrid_Click(object sender, EventArgs e)
-        {
-            PerformClearing();
-            var sizeDialog = new SelectSize();
-            if(sizeDialog.ShowDialog() == DialogResult.OK)
-            {
-                (rows, columns) = sizeDialog.Size;
-                cellGrid = new Cell[rows, columns];
-                CalculateCellSize();
-                mainGrid.Invalidate();
-            }   
-        }
-
+        /// <summary>
+        /// Rysowanie kazdego kadru animacji w zaleznosci od stanu komorki
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mainGrid_Paint(object sender, PaintEventArgs e)
         {
             if (rows != 0 && columns != 0)
@@ -100,64 +91,34 @@ namespace Maze_DFS_BFS
                 {
                     for (int j = 0; j < rows; j++)
                     {
-                        e.Graphics.FillPolygon(CellBrushMapper.GetBrush(cellGrid[j, i].State), CalculateSquare(j, i));
+                        e.Graphics.FillPolygon(CellBrushMapper.GetBrush(cellGrid[j, i].State),
+                                               CalculationHelper.CalculateSquare(j, i, CELL_SIZE_X, CELL_SIZE_Y));
                     }
                 }
             }
         }
 
-        private Point[] CalculateSquare(int row, int column)
-        {
-            return new Point[] {
-                new Point((int)(column * CELL_SIZE_X + 1), (int)(row * CELL_SIZE_Y + 1)),
-                new Point((int)((column + 1)* CELL_SIZE_X - 1), (int)(row * CELL_SIZE_Y + 1)),
-                new Point((int)((column + 1)* CELL_SIZE_X - 1), (int)((row + 1)* CELL_SIZE_Y - 1)),
-                new Point((int)(column * CELL_SIZE_X + 1), (int)((row + 1)* CELL_SIZE_Y - 1))
-            };
-        }
-
+        /// <summary>
+        /// Rysowanie granic z wcisnietym lewym przyciskiem
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void mainGrid_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                var cell = FindCell(e.X, e.Y);
+                var cell = CalculationHelper.FindCell(e.X, e.Y, CELL_SIZE_X, CELL_SIZE_Y);
                 if (cell.Row >= 0 && cell.Row < rows && cell.Column >= 0 && cell.Column < columns)
                 {
                     cellGrid[cell.Row, cell.Column].State = CellState.Border;
                 }
                 mainGrid.Invalidate();
             }
-            
         }
 
-        private void btnSelectStart_Click(object sender, EventArgs e)
-        {
-            if(!startWasAssigned) Mode = Mode.AssignStart;
-        }
-
-        private void btnSelectFinish_Click(object sender, EventArgs e)
-        {
-            if(!finishWasAssigned) Mode = Mode.AssignFinish;
-        }
-
-        private void btnGenerateMaze_Click(object sender, EventArgs e)
-        {
-            ClearCells();
-            var maze = new MazeGenerator(rows, columns);
-            var cells = maze.GenerateMaze();
-            for (int r = 0; r<rows; r++)
-            {
-                for(int c = 0;c<columns; c++)
-                {
-                    if (!cells[r,c])
-                    {
-                        cellGrid[r, c].State = CellState.Border;
-                    }
-                }
-            }
-            mainGrid.Invalidate();
-        }
-
+        /// <summary>
+        /// Oblicza rozmiar generowanej komorki na podstawie ilosci kolumn i wierszy
+        /// </summary>
         private void CalculateCellSize()
         {
             CELL_SIZE_X = (float)((double)700 / columns);
@@ -167,16 +128,108 @@ namespace Maze_DFS_BFS
             {
                 for (int j = 0; j < rows; j++)
                 {
-                    cellGrid[j, i] = new Cell(i, j, CellState.Unassigned,0,0);
+                    cellGrid[j, i] = new Cell(i, j, CellState.Unassigned, 0, 0);
                 }
             }
         }
+
+        #endregion
+
+        #region View behavior
+
+        public MainView()
+        {
+            InitializeComponent();
+        }
+
+        /// <summary>
+        /// Pokazuje okno wpisywania rozmiarow, nastepnie generuje grid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnGenerateGrid_Click(object sender, EventArgs e)
+        {
+            PerformClearing();
+            var sizeDialog = new SelectSize();
+            if (sizeDialog.ShowDialog() == DialogResult.OK)
+            {
+                (rows, columns) = sizeDialog.Size;
+                cellGrid = new Cell[rows, columns];
+                CalculateCellSize();
+                mainGrid.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Ustawia punkt startowy
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSelectStart_Click(object sender, EventArgs e)
+        {
+            if (!startWasAssigned) Mode = Mode.AssignStart;
+        }
+
+        /// <summary>
+        /// Ustawia punkt koncowy
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSelectFinish_Click(object sender, EventArgs e)
+        {
+            if (!finishWasAssigned) Mode = Mode.AssignFinish;
+        }
+
+        /// <summary>
+        /// Generuje randomowy labirynt za pomoca algorytmu Prima
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnGenerateMaze_Click(object sender, EventArgs e)
+        {
+            ClearCells();
+            var maze = new MazeGenerator(rows, columns);
+            var cells = maze.GenerateMaze();
+            for (int r = 0; r < rows; r++)
+            {
+                for (int c = 0; c < columns; c++)
+                {
+                    if (!cells[r, c])
+                    {
+                        cellGrid[r, c].State = CellState.Border;
+                    }
+                }
+            }
+            mainGrid.Invalidate();
+        }
+
+        /// <summary>
+        /// Rysuje koncowa sciezke od punkt start -> finish
+        /// </summary>
+        private void ShowSolution()
+        {
+            Cell curr = endPoint;
+            do
+            {
+                curr = _visitedNodes.FirstOrDefault(p => p.Column == curr.Prev_Col && p.Row == curr.Prev_Row);
+                if (curr.Row == 0 || curr.Column == 0) break;
+                cellGrid[curr.Row, curr.Column].State = CellState.Solution;
+            }
+            while (curr.Row != startPoint.Row || curr.Column != startPoint.Column);
+            cellGrid[startPoint.Row, startPoint.Column].State = CellState.Start;
+            mainGrid.Invalidate();
+        }
+
+        #endregion
+
+        #region Animation Timer
 
         private void dfsBtnSolve_Click(object sender, EventArgs e)
         {
             Algorithm = Algorithm.DFS;
             _visitedNodes = new List<Cell>();
             stack = new Stack<Cell>();
+            _comparer = new CellEqualityComparer();
 
             var neighbours = NeighboursHelper.GetPossibleNeighbours(cellGrid, startPoint);
 
@@ -193,6 +246,7 @@ namespace Maze_DFS_BFS
             Algorithm = Algorithm.BFS;
             _visitedNodes = new List<Cell>();
             queue = new Queue<Cell>();
+            _comparer = new CellEqualityComparer();
 
             var neighbours = NeighboursHelper.GetPossibleNeighbours(cellGrid, startPoint);
             neighbours.Reverse();
@@ -207,11 +261,11 @@ namespace Maze_DFS_BFS
 
         private void animationTimer_Tick(object sender, EventArgs e)
         {
-            foreach(var n in _visitedNodes)
+            foreach (var n in _visitedNodes)
             {
                 if ((n.Row == endPoint.Row && n.Column == endPoint.Column) ||
                     (n.Row == startPoint.Row && n.Column == startPoint.Column)) continue;
-                        
+
                 cellGrid[n.Row, n.Column].State = CellState.Visited;
             }
 
@@ -225,13 +279,12 @@ namespace Maze_DFS_BFS
                     _visitedNodes.Add(nextCell);
 
                     var moves = NeighboursHelper.GetPossibleNeighbours(cellGrid, nextCell);
-                    moves = moves.Except(_visitedNodes);
+                    moves = moves.Except(_visitedNodes, _comparer);
 
                     foreach (var m in moves)
                     {
-                        if (!stack.Contains(m)) stack.Push(m);
+                        if (!stack.Contains(m, _comparer)) stack.Push(m);
                     }
-                    if (stack.Distinct().Count() != stack.Count) MessageBox.Show("FUCK DUPLICATES");
                 }
                 else
                 {
@@ -251,11 +304,11 @@ namespace Maze_DFS_BFS
                     _visitedNodes.Add(item);
 
                     var moves = NeighboursHelper.GetPossibleNeighbours(cellGrid, item);
-                    moves = moves.Except(_visitedNodes);
+                    moves = moves.Except(_visitedNodes, _comparer);
 
                     foreach (var m in moves)
                     {
-                        if (!queue.Contains(m)) queue.Enqueue(m);
+                        if (!queue.Contains(m, _comparer)) queue.Enqueue(m);
                     }
                 }
                 else
@@ -266,30 +319,13 @@ namespace Maze_DFS_BFS
                     ShowSolution();
                 }
             }
-            
+
             mainGrid.Invalidate();
         }
 
-        private void ShowSolution()
-        {
-            Cell curr = endPoint;
-            do
-            {
-                curr = _visitedNodes.FirstOrDefault(p => p.Column == curr.Prev_Col && p.Row == curr.Prev_Row);
-                if (curr.Row == 0 || curr.Column == 0) break;
-                cellGrid[curr.Row, curr.Column].State = CellState.Solution;
-            }
-            while (curr.Row != startPoint.Row || curr.Column != startPoint.Column);
-            cellGrid[startPoint.Row, startPoint.Column].State = CellState.Start;
-            mainGrid.Invalidate();
-        }
+        #endregion
 
-        private Cell FindCell(int x, int y)
-        {
-            return new Cell(y: (int)Math.Floor(x / CELL_SIZE_X),
-                            x: (int)Math.Floor(y / CELL_SIZE_Y),
-                            state: CellState.Border, prev_r:0, prev_c:0);
-        }
+        #region Clearing
 
         private void PerformClearing()
         {
@@ -306,48 +342,7 @@ namespace Maze_DFS_BFS
                     cellGrid[r, c].State = CellState.Unassigned;
         }
 
-    }
+        #endregion
 
-    public struct Cell
-    {
-        public int Row { get; set; }
-        public int Column { get; set; }
-        public CellState State { get; set; }
-
-        public int Prev_Col { get; set; }
-        public int Prev_Row { get; set; }
-
-
-        public Cell(int x, int y, CellState state, int prev_r, int prev_c)
-        {
-            Row = x;
-            Column = y;
-            State = state;
-            Prev_Col = prev_c;
-            Prev_Row = prev_r;
-        }
-    }
-
-    public enum CellState
-    {
-        Border,
-        Start,
-        Finish,
-        Unassigned,
-        Solution,
-        Visited,
-        Current
-    }
-
-    public enum Mode
-    {
-        AssignStart,
-        AssignFinish,
-        None
-    }
-
-    public enum Algorithm
-    {
-        DFS, BFS
     }
 }

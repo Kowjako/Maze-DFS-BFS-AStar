@@ -132,7 +132,7 @@ namespace Maze_DFS_BFS
             // 
             // animationTimer
             // 
-            this.animationTimer.Interval = 20;
+            this.animationTimer.Interval = 50;
             this.animationTimer.Tick += new System.EventHandler(this.animationTimer_Tick);
             // 
             // MainView

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Maze_DFS_BFS.Models;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Maze_DFS_BFS.Helpers
