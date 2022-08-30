@@ -28,6 +28,7 @@ namespace Maze_DFS_BFS.Helpers
             {
                 item.G = HeuristicDistance(item, startCell);
                 item.H = HeuristicDistance(item, finishCell);
+                item.F = item.G + item.H;
             }
         }
 

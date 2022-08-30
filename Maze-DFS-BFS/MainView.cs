@@ -357,7 +357,13 @@ namespace Maze_DFS_BFS
                 {
                     var item = _prioQueue.Top;
 
-                    if (item.Row == endPoint.Row && item.Column == endPoint.Column) return;
+                    if (item.Row == endPoint.Row && item.Column == endPoint.Column)
+                    {
+                        (endPoint.Prev_Row, endPoint.Prev_Col) = (item.Prev_Row, item.Prev_Col);
+                        animationTimer.Stop();
+                        ShowSolution();
+                        return;
+                    }
 
                     _prioQueue.Pop();
                     cellGrid[item.Row, item.Column].State = CellState.Current;
@@ -372,10 +378,11 @@ namespace Maze_DFS_BFS
                         var tmp_g = item.G + 1;
                         var tmp_f = tmp_g + CalculationHelper.HeuristicDistance(n, endPoint);
 
-                        if(tmp_f < n.F)
+                        if (tmp_f < n.F)
                         {
                             (n.G, n.F) = (tmp_g, tmp_f);
-                            _prioQueue.Push(n);
+                            if(!_prioQueue.Conatins(n, _comparer))
+                                _prioQueue.Push(n);
                         }
                     }
                 }
