@@ -15,7 +15,7 @@ namespace Maze_DFS_BFS
         private Mode Mode = Mode.None;
         private Cell[,] cellGrid;
         private float CELL_SIZE_X, CELL_SIZE_Y;
-        private bool startWasAssigned, finishWasAssigned;
+        private bool startWasAssigned, finishWasAssigned, endSearch;
         private Cell startPoint, endPoint;
         private List<Cell> _visitedNodes;
         private Algorithm Algorithm;
@@ -32,6 +32,12 @@ namespace Maze_DFS_BFS
         #region BFS vars
 
         private Queue<Cell> queue;
+
+        #endregion
+
+        #region A* vars
+
+        private PriorityQueue<Cell> _prioQueue;
 
         #endregion
 
@@ -212,7 +218,7 @@ namespace Maze_DFS_BFS
             do
             {
                 curr = _visitedNodes.FirstOrDefault(p => p.Column == curr.Prev_Col && p.Row == curr.Prev_Row);
-                if (curr.Row == 0 || curr.Column == 0) break;
+                if (curr == null) break;
                 cellGrid[curr.Row, curr.Column].State = CellState.Solution;
             }
             while (curr.Row != startPoint.Row || curr.Column != startPoint.Column);
@@ -261,7 +267,24 @@ namespace Maze_DFS_BFS
 
         private void astartBtnSolve_Click(object sender, EventArgs e)
         {
+            Algorithm = Algorithm.A_STAR;
+            _visitedNodes = new List<Cell>();
+            _prioQueue = new PriorityQueue<Cell>(10, new CellComparer());
 
+            _comparer = new CellEqualityComparer();
+
+            startPoint.G = 0;
+            startPoint.F = CalculationHelper.HeuristicDistance(startPoint, endPoint);
+
+            var neighbours = NeighboursHelper.GetPossibleNeighbours(cellGrid, startPoint);
+            CalculationHelper.CalculateHeursticForPoints(neighbours, startPoint, endPoint);
+            
+            foreach(var n in neighbours)
+            {
+                _prioQueue.Push(n);
+            }
+
+            animationTimer.Start();
         }
 
         private void animationTimer_Tick(object sender, EventArgs e)
@@ -277,11 +300,12 @@ namespace Maze_DFS_BFS
             // Kazdy krok poszczegolnych algorytmow
             if (Algorithm == Algorithm.DFS)
             {
-                if (!stack.Any(p => p.Row == endPoint.Row && p.Column == endPoint.Column))
+                if (!stack.Contains(endPoint, _comparer))
                 {
+                    CheckNoSolution(stack);
+                    if (endSearch) return;
                     var nextCell = stack.Pop();
                     cellGrid[nextCell.Row, nextCell.Column].State = CellState.Current;
-
                     _visitedNodes.Add(nextCell);
 
                     var moves = NeighboursHelper.GetPossibleNeighbours(cellGrid, nextCell);
@@ -302,8 +326,10 @@ namespace Maze_DFS_BFS
             }
             else if (Algorithm == Algorithm.BFS)
             {
-                if (!queue.Any(p => p.Row == endPoint.Row && p.Column == endPoint.Column))
+                if (!queue.Contains(endPoint, _comparer))
                 {
+                    CheckNoSolution(queue);
+                    if (endSearch) return;
                     var item = queue.Dequeue();
                     cellGrid[item.Row, item.Column].State = CellState.Current;
 
@@ -327,10 +353,46 @@ namespace Maze_DFS_BFS
             }
             else if (Algorithm == Algorithm.A_STAR)
             {
+                if(_prioQueue.Count != 0)
+                {
+                    var item = _prioQueue.Top;
 
+                    if (item.Row == endPoint.Row && item.Column == endPoint.Column) return;
+
+                    _prioQueue.Pop();
+                    cellGrid[item.Row, item.Column].State = CellState.Current;
+
+                    _visitedNodes.Add(item);
+
+                    var moves = NeighboursHelper.GetPossibleNeighbours(cellGrid, item);
+                    moves = moves.Except(_visitedNodes, _comparer);
+
+                    foreach(var n in moves)
+                    {
+                        var tmp_g = item.G + 1;
+                        var tmp_f = tmp_g + CalculationHelper.HeuristicDistance(n, endPoint);
+
+                        if(tmp_f < n.F)
+                        {
+                            (n.G, n.F) = (tmp_g, tmp_f);
+                            _prioQueue.Push(n);
+                        }
+                    }
+                }
             }
 
             mainGrid.Invalidate();
+        }
+
+        private void CheckNoSolution(IEnumerable<Cell> collection)
+        {
+            if (collection.Count() == 0)
+            {
+                endSearch = true;
+                animationTimer.Interval = 5000;
+                animationTimer.Stop();
+                MessageBox.Show(this,"Nie istnieje rozwiązania!", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         #endregion
@@ -339,6 +401,7 @@ namespace Maze_DFS_BFS
 
         private void PerformClearing()
         {
+            ClearCells();
             rows = columns = 0;
             CELL_SIZE_X = CELL_SIZE_Y = 0;
             Mode = Mode.None;

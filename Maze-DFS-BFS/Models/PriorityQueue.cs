@@ -151,20 +151,9 @@ namespace Maze_DFS_BFS.Models
             }
         }
 
-        private static int HeapParent(int i)
-        {
-            return (i - 1) / 2;
-        }
-
-        private static int HeapLeftChild(int i)
-        {
-            return (i * 2) + 1;
-        }
-
-        private static int HeapRightFromLeft(int i)
-        {
-            return i + 1;
-        }
+        private static int HeapParent(int i) => (i - 1) / 2;
+        private static int HeapLeftChild(int i) => (i * 2) + 1;
+        private static int HeapRightFromLeft(int i) => i + 1;
 
         #endregion
     }

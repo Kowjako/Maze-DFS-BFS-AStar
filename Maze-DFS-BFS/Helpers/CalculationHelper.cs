@@ -1,5 +1,6 @@
 ﻿using Maze_DFS_BFS.Models;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace Maze_DFS_BFS.Helpers
@@ -18,8 +19,17 @@ namespace Maze_DFS_BFS.Helpers
                 new Point((int)(column * CELL_SIZE_X + 1), (int)((row + 1)* CELL_SIZE_Y - 1))
             };
 
-        public static int HeuristicDistance(Cell start, Cell goal) =>
-            Math.Abs(start.Row + goal.Row) + Math.Abs(start.Column + goal.Column);
+        public static int HeuristicDistance(Cell current, Cell destination) =>
+            Math.Abs(current.Row - destination.Row) + Math.Abs(current.Column - destination.Column);
+
+        public static void CalculateHeursticForPoints(IEnumerable<Cell> points, Cell startCell, Cell finishCell)
+        {
+            foreach (var item in points)
+            {
+                item.G = HeuristicDistance(item, startCell);
+                item.H = HeuristicDistance(item, finishCell);
+            }
+        }
 
     }
 }
